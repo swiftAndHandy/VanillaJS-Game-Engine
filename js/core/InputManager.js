@@ -15,10 +15,10 @@ export class InputManager {
     #keys = {};
 
     constructor() {
-        this.setupInput();
+        this.#setupInput();
     }
 
-    setupInput() {
+    #setupInput() {
         window.addEventListener("keydown", (e) => {
             const key = e.key.toLowerCase();
             this.#keys[key] = true;
@@ -36,6 +36,14 @@ export class InputManager {
                 this.#order[axis] = this.#order[axis].filter(k => k !== key);
             }
         });
+
+        window.addEventListener("contextmenu", () => this.#clearInput());
+        window.addEventListener("blur", () => this.#clearInput());
+    }
+
+    #clearInput() {
+        this.#keys = {};
+        this.#order = { "horizontal": [], "vertical": [] };
     }
 
     getAxis(axis) {

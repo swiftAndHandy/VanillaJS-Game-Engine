@@ -11,25 +11,26 @@ export class Game {
         this.renderSystem = new RenderSystem(this.canvas);
         this.player = new Player();
         this.inputManager = new InputManager();
-
         this.init()
     }
 
     init() {
         this.resizeCanvas();
         window.addEventListener("resize", () => this.resizeCanvas());
-
+        this.lastTimestamp = performance.now();
         requestAnimationFrame((time) => this.gameLoop(time));
-    }
-
-    update() {
-        this.player.update(this.inputManager);
     }
 
     gameLoop(timestamp) {
-        this.update();
+        const deltaTime = Math.min((timestamp - this.lastTimestamp)/1000, 0.02);
+        this.lastTimestamp = timestamp;
+        this.update(deltaTime);
         this.renderSystem.render(this.player)
         requestAnimationFrame((time) => this.gameLoop(time));
+    }
+
+    update(deltaTime) {
+        this.player.update(deltaTime, this.inputManager);
     }
 
     resizeCanvas() {

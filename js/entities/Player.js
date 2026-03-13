@@ -6,16 +6,29 @@ export class Player {
         this.y = GAME_HEIGHT / 2;
         this.width = 64;
         this.height = 64;
-        this.speed = 10;
+        this.speed = 300;
+
+        this.speedMultiplier = 1;
     }
 
-    update(inputManager) {
-        const dx = inputManager.getAxis('horizontal');
-        const dy = inputManager.getAxis('vertical');
+    update(deltaTime, inputManager) {
+        let dx = inputManager.getAxis('horizontal');
+        let dy = inputManager.getAxis('vertical');
 
+        /**
+         * Normalize diagonal movement speed and update player position
+         **/
         if (dx || dy) {
-            this.x += dx * this.speed;
-            this.y += dy * this.speed;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            dx /= len;
+            dy /= len;
+
+            this.x += dx * this.speed * this.speedMultiplier * deltaTime;
+            this.y += dy * this.speed * this.speedMultiplier * deltaTime;
         }
+
+        this.x = Math.max(0, Math.min(GAME_WIDTH - this.width, this.x));
+        this.y = Math.max(0, Math.min(GAME_HEIGHT - this.height, this.y));
+
     }
 }
