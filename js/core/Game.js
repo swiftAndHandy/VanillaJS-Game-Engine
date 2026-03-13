@@ -1,16 +1,21 @@
 import { GAME_WIDTH, GAME_HEIGHT, IMAGE_SMOOTHING_ENABLED } from "./constants.js";
 import { RenderSystem } from "../systems/RenderSystem.js";
 import { Player } from "../entities/Player.js";
-import {InputManager} from "./InputManager.js";
+import { InputManager } from "../managers/InputManager.js";
+import { ImageManager } from "../managers/ImageManager.js";
 
 export class Game {
     constructor() {
         this.canvas = document.getElementById("gameCanvas");
         this.ctx = this.canvas.getContext("2d");
         this.ctx.imageSmoothingEnabled = IMAGE_SMOOTHING_ENABLED;
-        this.renderSystem = new RenderSystem(this.canvas);
-        this.player = new Player();
+
         this.inputManager = new InputManager();
+        this.imageManager = new ImageManager();
+        this.imageManager.loadAll();
+
+        this.renderSystem = new RenderSystem(this.canvas, this.imageManager);
+        this.player = new Player();
         this.init()
     }
 
