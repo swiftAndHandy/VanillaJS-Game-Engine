@@ -1,5 +1,6 @@
 :root {
     --midnight-blue: #1a1a2e;
+    --menu-background-color: rgba(0, 0, 0, 0.9);
 }
 
 * {
@@ -10,7 +11,12 @@
 
 body {
     background-color: var(--midnight-blue);
+    color: #eee;
     overflow: hidden;
+}
+
+ul {
+    list-style: none;
 }
 
 #gameContainer {
@@ -29,3 +35,47 @@ body {
     background-color: var(--midnight-blue);
 }
 
+.ui-panel {
+    position: absolute;
+    background-color: var(--menu-background-color);
+    backdrop-filter: blur(10px);
+    border: 3px solid #4a9eff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(74, 158, 255, 0.3);
+    isolation: isolate;
+    display: none;
+}
+
+.ui-panel.active {
+    display: block;
+}
+
+.ui-panel h1 {
+    color: #4a9eff;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+}
+
+/* Buttons */
+button {
+    background-color: var(--midnight-blue);
+    color: white;
+    border: 2px solid #4a9eff;
+    border-radius: 5px;
+    padding: 12px 24px;
+    margin: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    transition: 0.3s;
+    box-shadow: 0 0 15px rgba(74, 158, 255, 0.2);
+}
+
+button:hover, button:focus-visible {
+    background-color: #2a2a9c;
+    box-shadow: 0 0 25px rgba(74, 158, 255, 0.5);
+    transform: translateY(-1px);
+}

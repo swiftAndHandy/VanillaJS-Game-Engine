@@ -38,6 +38,10 @@ export class Game {
         this.player.update(deltaTime, this.inputManager);
     }
 
+    setupUI() {
+
+    }
+
     resizeCanvas() {
         let w, h;
         const ratio = 16/9;
