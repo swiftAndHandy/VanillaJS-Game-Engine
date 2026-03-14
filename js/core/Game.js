@@ -1,4 +1,5 @@
-import { GAME_WIDTH, GAME_HEIGHT, IMAGE_SMOOTHING_ENABLED, ScenePhase } from "./constants.js";
+import { GAME_WIDTH, GAME_HEIGHT, IMAGE_SMOOTHING_ENABLED } from "./constants.js";
+import { ScenePhase } from "./ScenePhase.js";
 import { RenderSystem } from "../systems/RenderSystem.js";
 import { Player } from "../entities/Player.js";
 import { InputManager } from "../managers/InputManager.js";
