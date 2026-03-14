@@ -1,9 +1,9 @@
 import { GAME_WIDTH, GAME_HEIGHT, IMAGE_SMOOTHING_ENABLED } from "./constants.js";
-import { ScenePhase } from "./ScenePhase.js";
 import { RenderSystem } from "../systems/RenderSystem.js";
 import { Player } from "../entities/Player.js";
 import { InputManager } from "../managers/InputManager.js";
 import { ImageManager } from "../managers/ImageManager.js";
+import { ScenePhaseManager } from "../managers/ScenePhaseManager.js";
 import { UiManager} from "../managers/UiManager.js";
 
 export class Game {
@@ -15,12 +15,12 @@ export class Game {
         this.inputManager = new InputManager();
         this.imageManager = new ImageManager();
         this.uiManager = new UiManager(this);
+        this.sceneManager = new ScenePhaseManager();
 
         this.renderSystem = new RenderSystem(this.canvas, this.imageManager);
 
         this.player = new Player();
 
-        this.scenePhase = ScenePhase.MENU;
         this.init()
     }
 
@@ -40,12 +40,12 @@ export class Game {
     }
 
     update(deltaTime) {
-        if (this.scenePhase !== ScenePhase.PLAYING) return;
+        if (!this.sceneManager.playingScenePhaseIsActive()) return;
         this.player.update(deltaTime, this.inputManager);
     }
 
     render() {
-        if (this.scenePhase === ScenePhase.MENU) {
+        if (this.sceneManager === this.sceneManager.Phase.MENU) {
             this.ctx.fillStyle = "#0f3460";
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         } else {
@@ -54,8 +54,24 @@ export class Game {
     }
 
     startGame() {
-        this.scenePhase = ScenePhase.PLAYING;
+        this.sceneManager.setScenePhaseToPlaying();
         this.uiManager.hideAllPanels();
+    }
+
+    pauseGame() {
+        this.sceneManager.setScenePhaseToPaused();
+    }
+
+    resumeGame() {
+        this.sceneManager.setScenePhaseToPlaying();
+    }
+
+    quitToMenu() {
+        this.returnToMenu()
+    }
+
+    returnToMenu() {
+        this.sceneManager.setScenePhaseToMenu();
     }
 
     resizeCanvas() {

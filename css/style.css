@@ -52,7 +52,7 @@ ul {
     display: block;
 }
 
-.ui-panel h1 {
+.ui-panel h1, .ui-panel h2 {
     color: #4a9eff;
     margin-bottom: 20px;
     font-size: 2.5rem;
@@ -78,4 +78,9 @@ button:hover, button:focus-visible {
     background-color: #2a2a9c;
     box-shadow: 0 0 25px rgba(74, 158, 255, 0.5);
     transform: translateY(-1px);
+}
+
+#mainMenu .controls {
+    margin-top: 20px;
+    font-size: 1rem;
 }
