@@ -1,5 +1,5 @@
 export class ScenePhaseManager {
-    Phase = Object.freeze({
+    #Phase = Object.freeze({
         "MENU": "menu",
         "PLAYING": "playing",
         "PAUSED": "paused",
@@ -8,30 +8,31 @@ export class ScenePhaseManager {
     #scenePhase;
 
     constructor() {
-        this.#scenePhase = this.Phase.MENU
+        this.#scenePhase = this.#Phase.MENU
     }
 
     playingScenePhaseIsActive() {
-        return this.#scenePhase === this.Phase.PLAYING;
+        return this.#scenePhase === this.#Phase.PLAYING;
     }
 
     pausedScenePhaseIsActive() {
-        return this.#scenePhase === this.Phase.PAUSED;
+        return this.#scenePhase === this.#Phase.PAUSED;
     }
 
     menuScenePhaseIsActive() {
-        return this.#scenePhase === this.Phase.MENU;
+        return this.#scenePhase === this.#Phase.MENU;
     }
 
     setScenePhaseToPlaying() {
-        this.#scenePhase = this.Phase.PLAYING;
+        this.#scenePhase = this.#Phase.PLAYING;
     }
 
     setScenePhaseToPaused() {
-        this.#scenePhase = this.Phase.PAUSED;
+        this.#scenePhase = this.#Phase.PAUSED;
     }
 
     setScenePhaseToMenu() {
-        this.#scenePhase = this.Phase.MENU;
+        this.#scenePhase = this.#Phase.MENU;
+
     }
 }

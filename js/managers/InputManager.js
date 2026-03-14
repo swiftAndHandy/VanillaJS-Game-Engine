@@ -27,6 +27,10 @@ export class InputManager {
                     this.#order[axis].push(key);
                 }
             }
+
+            if (e.key === 'Escape') {
+                window.dispatchEvent(new CustomEvent('escape-pressed'));
+            }
         });
 
         window.addEventListener("keyup", (e) => {
