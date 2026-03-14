@@ -24,10 +24,15 @@ export class Game {
         this.init()
     }
 
-    init() {
+    async init() {
+        await Promise.all([
+            this.imageManager.loadAll()
+        ]);
         this.resizeCanvas();
-        this.configControls();
         window.addEventListener("resize", () => this.resizeCanvas());
+        this.uiManager.hideAllPanels();
+        this.uiManager.showMainMenu();
+        this.configControls();
         this.lastTimestamp = performance.now();
         requestAnimationFrame((time) => this.gameLoop(time));
     }
@@ -73,10 +78,6 @@ export class Game {
     resetGame() {
         this.lastTimestamp = performance.now();
         this.player.reset();
-    }
-
-    quitToMainMenu() {
-        this.returnToMainMenu();
     }
 
     returnToMainMenu() {

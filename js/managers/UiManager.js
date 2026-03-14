@@ -7,6 +7,7 @@ export class UiManager {
 
     #mainMenu = document.getElementById("mainMenu");
     #pauseMenu = document.getElementById('pauseMenu');
+    #loadingScreen = document.getElementById('loadingScreen');
     #playButton = document.getElementById('playBtn');
     #resumeButton = document.getElementById('resumeBtn');
     #quitButton = document.getElementById('quitBtn');
@@ -22,7 +23,7 @@ export class UiManager {
         }
 
         this.#quitButton.onclick = () => {
-            this.game.quitToMainMenu();
+            this.game.returnToMainMenu();
         }
     }
 
@@ -43,5 +44,13 @@ export class UiManager {
 
     hidePauseMenu() {
         this.#pauseMenu.classList.remove('active');
+    }
+
+    showLoadingScreen() {
+        this.#loadingScreen.classList.add('active');
+    }
+
+    hideLoadingScreen() {
+        this.#loadingScreen.classList.remove('active');
     }
 }

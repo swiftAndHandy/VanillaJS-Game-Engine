@@ -1,6 +1,6 @@
 :root {
-    --midnight-blue: #1a1a2e;
-    --menu-background-color: rgba(0, 0, 0, 0.9);
+    --midnight-blue: rgb(26, 26, 46);
+    --menu-background-color: rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -33,6 +33,10 @@ ul {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     background-color: var(--midnight-blue);
+}
+
+#loadingScreen {
+    padding: 50px;
 }
 
 .ui-panel {

@@ -1,29 +1,34 @@
 export class ImageManager {
     constructor() {
         this.images = {};
-        this.loadAll();
     }
 
     load(name, path) {
-        const img = new Image();
-        img.src = path;
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = path;
 
-        this.images[name] = { img, loaded: false };
+            this.images[name] = { img, loaded: false };
 
-        img.onload = () => {
-            this.images[name].loaded = true;
-        };
+            img.onload = () => {
+                this.images[name].loaded = true;
+                resolve();
+            };
 
-        img.onerror = () => {
-            console.error(`Image issue for "${name}". Fallback is used if possible.`);
-        }
+            img.onerror = () => {
+                console.error(`Image issue for "${name}". Fallback is used if possible.`);
+                resolve();
+            }
+        });
     }
 
     get(name) {
         return this.images[name]?.loaded ? this.images[name].img : null;
     }
 
-    loadAll() {
-        this.load('player', './images/player.png');
+    async loadAll() {
+        await Promise.all([
+            this.load('player', './images/player.png'),
+        ]);
     }
 }
