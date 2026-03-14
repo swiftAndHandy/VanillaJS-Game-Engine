@@ -1,6 +1,7 @@
 export class ImageManager {
     constructor() {
         this.images = {};
+        this.loadAll();
     }
 
     load(name, path) {

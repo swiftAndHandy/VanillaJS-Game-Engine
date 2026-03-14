@@ -1,8 +1,9 @@
-import { GAME_WIDTH, GAME_HEIGHT, IMAGE_SMOOTHING_ENABLED } from "./constants.js";
+import { GAME_WIDTH, GAME_HEIGHT, IMAGE_SMOOTHING_ENABLED, ScenePhase } from "./constants.js";
 import { RenderSystem } from "../systems/RenderSystem.js";
 import { Player } from "../entities/Player.js";
 import { InputManager } from "../managers/InputManager.js";
 import { ImageManager } from "../managers/ImageManager.js";
+import { UiManager} from "../managers/UiManager.js";
 
 export class Game {
     constructor() {
@@ -12,10 +13,13 @@ export class Game {
 
         this.inputManager = new InputManager();
         this.imageManager = new ImageManager();
-        this.imageManager.loadAll();
+        this.uiManager = new UiManager(this);
 
         this.renderSystem = new RenderSystem(this.canvas, this.imageManager);
+
         this.player = new Player();
+
+        this.scenePhase = ScenePhase.MENU;
         this.init()
     }
 
@@ -30,16 +34,27 @@ export class Game {
         const deltaTime = Math.min((timestamp - this.lastTimestamp)/1000, 0.02);
         this.lastTimestamp = timestamp;
         this.update(deltaTime);
-        this.renderSystem.render(this.player)
+        this.render();
         requestAnimationFrame((time) => this.gameLoop(time));
     }
 
     update(deltaTime) {
+        if (this.scenePhase !== ScenePhase.PLAYING) return;
         this.player.update(deltaTime, this.inputManager);
     }
 
-    setupUI() {
+    render() {
+        if (this.scenePhase === ScenePhase.MENU) {
+            this.ctx.fillStyle = "#0f3460";
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        } else {
+            this.renderSystem.render(this.player);
+        }
+    }
 
+    startGame() {
+        this.scenePhase = ScenePhase.PLAYING;
+        this.uiManager.hideAllPanels();
     }
 
     resizeCanvas() {
