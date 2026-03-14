@@ -7,15 +7,27 @@ export class UiManager {
 
     #mainMenu = document.getElementById("mainMenu");
     #pauseMenu = document.getElementById('pauseMenu');
+    #playButton = document.getElementById('playBtn');
+    #resumeButton = document.getElementById('resumeBtn');
+    #quitButton = document.getElementById('quitBtn');
+    #uiPanels = document.querySelectorAll(".ui-panel");
 
     setupUI() {
-        document.getElementById("playBtn").onclick = () => {
+        this.#playButton.onclick = () => {
             this.game.startGame();
+        }
+
+        this.#resumeButton.onclick = () => {
+            this.game.resumeGame();
+        }
+
+        this.#quitButton.onclick = () => {
+            this.game.quitToMainMenu();
         }
     }
 
     hideAllPanels() {
-        document.querySelectorAll(".ui-panel").forEach(panel => {
+        this.#uiPanels.forEach(panel => {
             panel.classList.remove("active");
         })
     }

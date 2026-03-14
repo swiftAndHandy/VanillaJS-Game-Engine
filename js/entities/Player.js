@@ -4,11 +4,8 @@ export class Player {
     constructor() {
         this.width = 64;
         this.height = 64;
-        this.x = (GAME_WIDTH - this.width) / 2;
-        this.y = (GAME_HEIGHT - this.height) / 2;
         this.speed = 300;
-
-        this.speedMultiplier = 1;
+        this.reset();
     }
 
     update(deltaTime, inputManager) {
@@ -30,5 +27,11 @@ export class Player {
         this.x = Math.max(0, Math.min(GAME_WIDTH - this.width, this.x));
         this.y = Math.max(0, Math.min(GAME_HEIGHT - this.height, this.y));
 
+    }
+
+    reset() {
+        this.x = (GAME_WIDTH - this.width) / 2;
+        this.y = (GAME_HEIGHT - this.height) / 2;
+        this.speedMultiplier = 1;
     }
 }

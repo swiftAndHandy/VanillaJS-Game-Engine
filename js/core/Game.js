@@ -57,6 +57,7 @@ export class Game {
     startGame() {
         this.sceneManager.setScenePhaseToPlaying();
         this.uiManager.hideAllPanels();
+        this.resetGame();
     }
 
     pauseGame() {
@@ -69,11 +70,16 @@ export class Game {
         this.uiManager.hidePauseMenu();
     }
 
-    quitToMenu() {
-        this.returnToMenu()
+    resetGame() {
+        this.lastTimestamp = performance.now();
+        this.player.reset();
     }
 
-    returnToMenu() {
+    quitToMainMenu() {
+        this.returnToMainMenu();
+    }
+
+    returnToMainMenu() {
         this.sceneManager.setScenePhaseToMenu();
         this.uiManager.showMainMenu();
     }
