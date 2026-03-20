@@ -1,7 +1,7 @@
 import {GAME_WIDTH, GAME_HEIGHT, IMAGE_SMOOTHING_ENABLED} from "./constants.js";
 import {RenderSystem} from "../systems/RenderSystem.js";
 import {Player} from "../entities/Player.js";
-import {InputManager} from "../managers/InputManager.js";
+import {InputManager} from "../managers/input/InputManager.js";
 import {ImageManager} from "../managers/ImageManager.js";
 import {ScenePhaseManager} from "../managers/ScenePhaseManager.js";
 import {UiManager} from "../managers/UiManager.js";

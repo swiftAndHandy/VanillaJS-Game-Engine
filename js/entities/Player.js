@@ -2,7 +2,6 @@ import { GAME_WIDTH, GAME_HEIGHT } from "../core/constants.js";
 
 export class Player {
     constructor() {
-
         this.reset();
     }
 
@@ -25,6 +24,7 @@ export class Player {
         this.x = Math.max(0, Math.min(GAME_WIDTH - this.width, this.x));
         this.y = Math.max(0, Math.min(GAME_HEIGHT - this.height, this.y));
 
+        if (inputManager.pressed('jump')) console.log('jump');
     }
 
     reset() {
