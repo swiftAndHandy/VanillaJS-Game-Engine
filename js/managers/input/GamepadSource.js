@@ -2,7 +2,7 @@ export class GamepadSource {
     static #DEADZONE = 0.15;
     static #MAPPING = {
         jump: 0,
-        throw: 3,
+        attack: 3,
         run: 2,
         pause: 9,
         dpadLeft: 14,
@@ -14,23 +14,23 @@ export class GamepadSource {
     constructor() {
         window.addEventListener('gamepadconnected', (event) => {
             this.#index = event.gamepad.index;
-        })
+        });
 
         window.addEventListener('gamepaddisconnected', (event) => {
             this.#index = null;
-        })
+        });
     }
 
     isConnected() {
         return this.#index !== null;
     }
 
-    #get() {
+    #gamepad() {
         return this.isConnected() ? navigator.getGamepads()[this.#index] : null;
     }
 
     getAxis(axis) {
-        const gp = this.#get();
+        const gp = this.#gamepad();
         if (!gp) return 0;
         const raw = axis === 'horizontal' ? gp.axes[0] : gp.axes[1];
         return Math.abs(raw) > GamepadSource.#DEADZONE ? raw : 0;
@@ -38,7 +38,7 @@ export class GamepadSource {
 
     pressed(action) {
         if (!this.isConnected()) return false;
-        const gp = navigator.getGamepads()[this.#index];
+        const gp = this.#gamepad();
         const idx = GamepadSource.#MAPPING[action];
         return idx !== undefined ? gp.buttons[idx]?.pressed ?? false : false;
     }

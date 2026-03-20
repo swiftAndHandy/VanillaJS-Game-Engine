@@ -15,7 +15,7 @@ export class KeyboardSource {
         'jump': ' ',
         'attack': 'e',
         'run': 'shift',
-        'pause': 'esc',
+        'pause': 'escape',
     }
 
     #order = { "horizontal": [], "vertical": [] };
@@ -33,10 +33,6 @@ export class KeyboardSource {
                 if (KeyboardSource.#AXIS_KEYS[axis].includes(key) && !this.#order[axis].includes(key)) {
                     this.#order[axis].push(key);
                 }
-            }
-
-            if (e.key === 'Escape') {
-                window.dispatchEvent(new CustomEvent('escape-pressed'));
             }
         });
 

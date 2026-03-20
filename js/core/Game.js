@@ -32,7 +32,7 @@ export class Game {
         window.addEventListener("resize", () => this.resizeCanvas());
         this.uiManager.hideAllPanels();
         this.uiManager.showMainMenu();
-        this.configControls();
+        // this.configControls();
         this.lastTimestamp = performance.now();
         requestAnimationFrame((time) => this.gameLoop(time));
     }
@@ -40,8 +40,15 @@ export class Game {
     gameLoop(timestamp) {
         const deltaTime = Math.min((timestamp - this.lastTimestamp) / 1000, 0.02);
         this.lastTimestamp = timestamp;
+
+        if (this.inputManager.justPressed('pause')) {
+            if (this.sceneManager.playingScenePhaseIsActive()) this.pauseGame();
+            else if (this.sceneManager.pausedScenePhaseIsActive()) this.resumeGame();
+        }
+
         this.update(deltaTime);
         this.render();
+        this.inputManager.update();
         requestAnimationFrame((time) => this.gameLoop(time));
     }
 
@@ -108,13 +115,13 @@ export class Game {
         this.canvas.style.margin = `${margin}px`;
     }
 
-    configControls() {
-        window.addEventListener('escape-pressed', () => {
-            if (this.sceneManager.playingScenePhaseIsActive()) {
-                this.pauseGame();
-            } else if (this.sceneManager.pausedScenePhaseIsActive()) {
-                this.resumeGame()
-            }
-        });
-    }
+    // configControls() {
+    //     window.addEventListener('escape-pressed', () => {
+    //         if (this.sceneManager.playingScenePhaseIsActive()) {
+    //             this.pauseGame();
+    //         } else if (this.sceneManager.pausedScenePhaseIsActive()) {
+    //             this.resumeGame()
+    //         }
+    //     });
+    // }
 }
