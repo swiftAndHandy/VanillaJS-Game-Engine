@@ -25,6 +25,12 @@ export class UiManager {
         this.#quitButton.onclick = () => {
             this.game.returnToMainMenu();
         }
+
+        document.querySelectorAll('button').forEach(button => {
+            button.onmouseenter = () => {
+                this.game.audioManager.play('button_hover');
+            }
+        })
     }
 
     hideAllPanels() {

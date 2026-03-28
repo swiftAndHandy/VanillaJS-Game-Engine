@@ -1,22 +1,20 @@
-import {GAME_WIDTH, GAME_HEIGHT, IMAGE_SMOOTHING_ENABLED} from "./constants.js";
+import {GAME_WIDTH, GAME_HEIGHT} from "./constants.js";
 import {RenderSystem} from "../systems/RenderSystem.js";
 import {Player} from "../entities/Player.js";
 import {InputManager} from "../managers/input/InputManager.js";
 import {ImageManager} from "../managers/ImageManager.js";
 import {ScenePhaseManager} from "../managers/ScenePhaseManager.js";
 import {UiManager} from "../managers/UiManager.js";
+import {AudioManager} from "../managers/AudioManager.js";
 
 export class Game {
     constructor() {
         this.canvas = document.getElementById("gameCanvas");
-        this.ctx = this.canvas.getContext("2d");
-        this.ctx.imageSmoothingEnabled = IMAGE_SMOOTHING_ENABLED;
-
         this.sceneManager = new ScenePhaseManager();
         this.uiManager = new UiManager(this);
         this.inputManager = new InputManager();
         this.imageManager = new ImageManager();
-
+        this.audioManager = new AudioManager();
         this.renderSystem = new RenderSystem(this.canvas, this.imageManager);
 
         this.player = new Player();
@@ -26,13 +24,12 @@ export class Game {
 
     async init() {
         await Promise.all([
-            this.imageManager.loadAll()
+            this.imageManager.loadAll(),
+            this.audioManager.loadAll()
         ]);
         this.resizeCanvas();
         window.addEventListener("resize", () => this.resizeCanvas());
-        this.uiManager.hideAllPanels();
         this.uiManager.showMainMenu();
-        // this.configControls();
         this.lastTimestamp = performance.now();
         requestAnimationFrame((time) => this.gameLoop(time));
     }
@@ -47,7 +44,11 @@ export class Game {
         }
 
         this.update(deltaTime);
-        this.render();
+        if (!this.sceneManager.menuScenePhaseIsActive()) {
+            this.renderSystem.render(this.player);
+        } else {
+            this.renderSystem.renderMenuBackground();
+        }
         this.inputManager.update();
         requestAnimationFrame((time) => this.gameLoop(time));
     }
@@ -57,28 +58,22 @@ export class Game {
         this.player.update(deltaTime, this.inputManager);
     }
 
-    render() {
-        if (this.sceneManager.menuScenePhaseIsActive()) {
-            this.ctx.fillStyle = "#0f3460";
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        } else {
-            this.renderSystem.render(this.player);
-        }
-    }
-
     startGame() {
         this.sceneManager.setScenePhaseToPlaying();
+        this.audioManager.play('button_click');
         this.uiManager.hideAllPanels();
         this.resetGame();
     }
 
     pauseGame() {
         this.sceneManager.setScenePhaseToPaused();
+        this.audioManager.play('pause');
         this.uiManager.showPauseMenu();
     }
 
     resumeGame() {
         this.sceneManager.setScenePhaseToPlaying();
+        this.audioManager.play('unpause')
         this.uiManager.hidePauseMenu();
     }
 
@@ -89,6 +84,7 @@ export class Game {
 
     returnToMainMenu() {
         this.sceneManager.setScenePhaseToMenu();
+        this.audioManager.play('button_click');
         this.uiManager.showMainMenu();
     }
 
@@ -114,14 +110,4 @@ export class Game {
         this.canvas.style.height = `${h}px`;
         this.canvas.style.margin = `${margin}px`;
     }
-
-    // configControls() {
-    //     window.addEventListener('escape-pressed', () => {
-    //         if (this.sceneManager.playingScenePhaseIsActive()) {
-    //             this.pauseGame();
-    //         } else if (this.sceneManager.pausedScenePhaseIsActive()) {
-    //             this.resumeGame()
-    //         }
-    //     });
-    // }
 }

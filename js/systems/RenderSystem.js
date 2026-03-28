@@ -1,9 +1,10 @@
-import {GAME_HEIGHT, GAME_WIDTH, GRID_SIZE} from "../core/constants.js";
+import {GAME_HEIGHT, GAME_WIDTH, GRID_SIZE, IMAGE_SMOOTHING_ENABLED} from "../core/constants.js";
 
 export class RenderSystem {
     constructor(canvas, imageManager) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
+        this.ctx.imageSmoothingEnabled = IMAGE_SMOOTHING_ENABLED;
         this.imageManager = imageManager;
     }
 
@@ -41,5 +42,10 @@ export class RenderSystem {
             this.ctx.lineTo(GAME_WIDTH, i);
         }
         this.ctx.stroke()
+    }
+
+    renderMenuBackground() {
+        this.ctx.fillStyle = "#0f3460";
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
