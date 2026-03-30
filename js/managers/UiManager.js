@@ -6,6 +6,7 @@ export class UiManager {
     }
 
     #mainMenu = document.getElementById("mainMenu");
+    #timer = document.getElementById("timer");
     #pauseMenu = document.getElementById('pauseMenu');
     #loadingScreen = document.getElementById('loadingScreen');
     #playButton = document.getElementById('playBtn');
@@ -58,5 +59,19 @@ export class UiManager {
 
     hideLoadingScreen() {
         this.#loadingScreen.classList.remove('active');
+    }
+
+    showTimer() {
+        this.#timer.classList.add('active');
+    }
+
+    hideTimer() {
+        this.#timer.classList.remove('active');
+    }
+
+    updateTimer(time) {
+        const mins = Math.floor(time / 60);
+        let secs = Math.floor(time % 60);
+        this.#timer.textContent = `${mins}:${String(secs).padStart(2, '0')}`;
     }
 }

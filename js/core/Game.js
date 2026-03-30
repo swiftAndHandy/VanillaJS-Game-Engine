@@ -16,7 +16,6 @@ export class Game {
         this.imageManager = new ImageManager();
         this.audioManager = new AudioManager();
         this.renderSystem = new RenderSystem(this.canvas, this.imageManager);
-
         this.player = new Player();
 
         this.init()
@@ -37,6 +36,11 @@ export class Game {
     gameLoop(timestamp) {
         const deltaTime = Math.min((timestamp - this.lastTimestamp) / 1000, 0.02);
         this.lastTimestamp = timestamp;
+
+        if (this.sceneManager.playingScenePhaseIsActive()) {
+            this.time += deltaTime;
+            this.uiManager.updateTimer(this.time);
+        }
 
         if (this.inputManager.justPressed('pause')) {
             if (this.sceneManager.playingScenePhaseIsActive()) this.pauseGame();
@@ -62,6 +66,8 @@ export class Game {
         this.sceneManager.setScenePhaseToPlaying();
         this.audioManager.play('button_click');
         this.uiManager.hideAllPanels();
+        this.uiManager.showTimer();
+        this.time = 0;
         this.resetGame();
     }
 
@@ -85,6 +91,7 @@ export class Game {
     returnToMainMenu() {
         this.sceneManager.setScenePhaseToMenu();
         this.audioManager.play('button_click');
+        this.uiManager.hideTimer();
         this.uiManager.showMainMenu();
     }
 

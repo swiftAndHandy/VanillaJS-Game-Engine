@@ -88,3 +88,22 @@ button:hover, button:focus-visible {
     margin-top: 20px;
     font-size: 1rem;
 }
+
+#timer {
+    position: absolute;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    color: #4a9eff;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 20px rgba(74, 158, 255, 0.9);
+    font-weight: 700;
+    z-index: 1000;
+    display: none;
+    pointer-events: none;
+}
+
+#timer.active {
+    display: block;
+}
