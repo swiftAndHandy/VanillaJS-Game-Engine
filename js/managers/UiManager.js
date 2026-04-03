@@ -1,36 +1,48 @@
 export class UiManager {
 
+    #mainMenu
+    #timer
+    #pauseMenu
+    #loadingScreen
+    #playButton
+    #resumeButton
+    #quitButton
+    #uiPanels
+    #buttons
+
     constructor(game) {
         this.game = game;
+        this.#mainMenu = document.getElementById("mainMenu");
+        this.#timer = document.getElementById("timer");
+        this.#pauseMenu = document.getElementById('pauseMenu');
+        this.#loadingScreen = document.getElementById('loadingScreen');
+        this.#playButton = document.getElementById('playBtn');
+        this.#resumeButton = document.getElementById('resumeBtn');
+        this.#quitButton = document.getElementById('quitBtn');
+        this.#uiPanels = document.querySelectorAll(".ui-panel");
+        this.#buttons = document.querySelectorAll("button");
         this.setupUI();
     }
 
-    #mainMenu = document.getElementById("mainMenu");
-    #timer = document.getElementById("timer");
-    #pauseMenu = document.getElementById('pauseMenu');
-    #loadingScreen = document.getElementById('loadingScreen');
-    #playButton = document.getElementById('playBtn');
-    #resumeButton = document.getElementById('resumeBtn');
-    #quitButton = document.getElementById('quitBtn');
-    #uiPanels = document.querySelectorAll(".ui-panel");
+
 
     setupUI() {
-        this.#playButton.onclick = () => {
+        this.#playButton.addEventListener('click', () => {
             this.game.startGame();
-        }
+        });
 
-        this.#resumeButton.onclick = () => {
+        this.#resumeButton.addEventListener('click', () => {
             this.game.resumeGame();
-        }
+        });
 
-        this.#quitButton.onclick = () => {
+        this.#quitButton.addEventListener('click', () => {
             this.game.returnToMainMenu();
-        }
+        });
 
-        document.querySelectorAll('button').forEach(button => {
-            button.onmouseenter = () => {
+        this.#buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
                 this.game.audioManager.play('button_hover');
-            }
+            });
         })
     }
 
@@ -70,6 +82,7 @@ export class UiManager {
     }
 
     updateTimer(time) {
+        if (!this.#timer) return;
         const mins = Math.floor(time / 60);
         let secs = Math.floor(time % 60);
         this.#timer.textContent = `${mins}:${String(secs).padStart(2, '0')}`;
