@@ -10,7 +10,7 @@ export class AudioManager {
 
             audio.onloadeddata = () => {
                 this.sounds[name].loaded = true;
-                console.log(`Audio loaded: ${name}`);
+                console.log(`[DEV] Audio loaded: ${name}`);
                 resolve();
             }
 

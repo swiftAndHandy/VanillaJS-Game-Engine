@@ -1,4 +1,4 @@
-import {GAME_WIDTH, GAME_HEIGHT} from "./constants.js";
+import {GAME_WIDTH, GAME_HEIGHT, ASPECT_RATIO, CANVAS_MARGIN} from "./constants.js";
 import {RenderSystem} from "../systems/RenderSystem.js";
 import {Player} from "../entities/Player.js";
 import {InputManager} from "../managers/input/InputManager.js";
@@ -64,7 +64,7 @@ export class Game {
 
     startGame() {
         this.sceneManager.setScenePhaseToPlaying();
-        this.audioManager.play('button_click');
+        this.playSound('button_click');
         this.uiManager.hideAllPanels();
         this.uiManager.showTimer();
         this.time = 0;
@@ -73,13 +73,13 @@ export class Game {
 
     pauseGame() {
         this.sceneManager.setScenePhaseToPaused();
-        this.audioManager.play('pause');
+        this.playSound('pause');
         this.uiManager.showPauseMenu();
     }
 
     resumeGame() {
         this.sceneManager.setScenePhaseToPlaying();
-        this.audioManager.play('unpause')
+        this.playSound('unpause')
         this.uiManager.hidePauseMenu();
     }
 
@@ -90,24 +90,26 @@ export class Game {
 
     returnToMainMenu() {
         this.sceneManager.setScenePhaseToMenu();
-        this.audioManager.play('button_click');
+        this.playSound('button_click');
         this.uiManager.hideTimer();
         this.uiManager.showMainMenu();
     }
 
+    playSound(name) {
+        this.audioManager.play(name);
+    }
+
     resizeCanvas() {
         let w, h;
-        const ratio = 16 / 9;
-        const margin = 5;
-        const availableWidth = window.innerWidth - margin * 2;
-        const availableHeight = window.innerHeight - margin * 2;
+        const availableWidth = window.innerWidth - CANVAS_MARGIN * 2;
+        const availableHeight = window.innerHeight - CANVAS_MARGIN * 2;
 
-        if (availableWidth / availableHeight > ratio) {
+        if (availableWidth / availableHeight > ASPECT_RATIO) {
             h = availableHeight;
-            w = h * ratio
+            w = h * ASPECT_RATIO
         } else {
             w = availableWidth;
-            h = w / ratio;
+            h = w / ASPECT_RATIO;
         }
 
         this.canvas.width = GAME_WIDTH;
@@ -115,6 +117,6 @@ export class Game {
 
         this.canvas.style.width = `${w}px`;
         this.canvas.style.height = `${h}px`;
-        this.canvas.style.margin = `${margin}px`;
+        this.canvas.style.margin = `${CANVAS_MARGIN}px`;
     }
 }

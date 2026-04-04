@@ -12,6 +12,7 @@ export class ImageManager {
 
             img.onload = () => {
                 this.images[name].loaded = true;
+                console.log(`[DEV] Image loaded: ${name}`);
                 resolve();
             };
 
@@ -30,5 +31,9 @@ export class ImageManager {
         await Promise.all([
             this.load('player', './images/player.png'),
         ]);
+
+        // TODO: REMOVE BEFORE SHIPPING
+        const DEBUG_LOAD_DELAY = 1000;
+        await new Promise(resolve => setTimeout(resolve, DEBUG_LOAD_DELAY));
     }
 }
