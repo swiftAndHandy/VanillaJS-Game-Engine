@@ -6,6 +6,12 @@ export const enemyData = {
         speed: 80,
         damage: 1,
         collisionRadius: 24,
-        contactDamage: true,
+        contactDamage: 1,
+        buffs: {
+            speed: {
+                multiplier: 3,
+                duration: 300,
+            }
+        }
     }
 }

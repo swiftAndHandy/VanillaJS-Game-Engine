@@ -61,6 +61,7 @@ export class Game {
 
     update(deltaTime) {
         if (!this.sceneManager.playingScenePhaseIsActive()) return;
+        this.enemyManager.update(deltaTime, this.player);
         this.player.update(deltaTime, this.inputManager);
     }
 

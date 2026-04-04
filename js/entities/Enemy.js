@@ -14,11 +14,33 @@ export class Enemy {
         this.damage = data.damage;
         this.collisionRadius = data.collisionRadius;
         this.contactDamage = data.contactDamage;
+        this.buffs = data.buffs;
     }
 
     spawn(x, y) {
         this.x = x;
         this.y = y;
         this.health = this.data.health;
+    }
+
+    update(deltaTime, player) {
+        const dx = player.x - this.x;
+        const dy = player.y - this.y;
+        const len = Math.sqrt(dx * dx + dy * dy);
+
+        if (len > player.collisionRadius) {
+            console.table({x: this.x, y: this.y, 'speed': this.speed});
+            const normalizedDx = dx/len;
+            const normalizedDy = dy/len;
+            const speedBonus = this.buffs.speed.duration > 0 ? this.buffs.speed.multiplier : 1;
+            this.x += normalizedDx * this.speed * speedBonus * deltaTime;
+            this.y += normalizedDy * this.speed * speedBonus * deltaTime;
+        } else {
+            this.dealsContactDamage(deltaTime, player);
+        }
+    }
+
+    dealsContactDamage(deltaTime, player) {
+        player.receivesContactDamageFrom(this, deltaTime);
     }
 }

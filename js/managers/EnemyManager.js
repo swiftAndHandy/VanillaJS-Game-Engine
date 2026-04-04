@@ -13,4 +13,8 @@ export class EnemyManager {
     getActiveEnemies() {
         return [this.enemy];
     }
+
+    update(deltaTime, player) {
+        this.enemy.update(deltaTime, player);
+    }
 }
