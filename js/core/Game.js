@@ -1,11 +1,12 @@
-import {GAME_WIDTH, GAME_HEIGHT, ASPECT_RATIO, CANVAS_MARGIN} from "./constants.js";
+import {ASPECT_RATIO, CANVAS_MARGIN, GAME_HEIGHT, GAME_WIDTH} from "./constants.js";
 import {RenderSystem} from "../systems/RenderSystem.js";
 import {Player} from "../entities/Player.js";
 import {InputManager} from "../managers/input/InputManager.js";
 import {ImageManager} from "../managers/ImageManager.js";
+import {AudioManager} from "../managers/AudioManager.js";
 import {ScenePhaseManager} from "../managers/ScenePhaseManager.js";
 import {UiManager} from "../managers/UiManager.js";
-import {AudioManager} from "../managers/AudioManager.js";
+import { EnemyManager } from "../managers/EnemyManager.js";
 
 export class Game {
     constructor() {
@@ -17,6 +18,7 @@ export class Game {
         this.audioManager = new AudioManager();
         this.renderSystem = new RenderSystem(this.canvas, this.imageManager);
         this.player = new Player();
+        this.enemyManager = new EnemyManager();
 
         this.init()
     }
@@ -49,7 +51,7 @@ export class Game {
 
         this.update(deltaTime);
         if (!this.sceneManager.menuScenePhaseIsActive()) {
-            this.renderSystem.render(this.player);
+            this.renderSystem.render(this.player, this.enemyManager.getActiveEnemies());
         } else {
             this.renderSystem.renderMenuBackground();
         }
@@ -63,8 +65,8 @@ export class Game {
     }
 
     startGame() {
-        this.sceneManager.setScenePhaseToPlaying();
         this.playSound('button_click');
+        this.sceneManager.setScenePhaseToPlaying();
         this.uiManager.hideAllPanels();
         this.uiManager.showTimer();
         this.time = 0;
@@ -86,6 +88,7 @@ export class Game {
     resetGame() {
         this.lastTimestamp = performance.now();
         this.player.reset();
+        this.enemyManager.spawn(200, 200);
     }
 
     returnToMainMenu() {

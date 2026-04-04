@@ -8,11 +8,20 @@ export class RenderSystem {
         this.imageManager = imageManager;
     }
 
-    render(player) {
+    render(player, enemies = []) {
         this.ctx.fillStyle = "#0f3460";
         this.ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
         this.renderGrid();
+        this.renderEnemies(enemies);
         this.renderPlayer(player);
+    }
+
+    renderEnemies(enemies = []) {
+        for (let i = 0; i < enemies.length; i++) {
+            const enemy = enemies[i];
+            this.ctx.fillStyle = "#ff3460";
+            this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        }
     }
 
     renderPlayer(player) {
