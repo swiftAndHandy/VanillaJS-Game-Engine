@@ -13,7 +13,7 @@ export class Enemy {
         this.speed = data.speed;
         this.damage = data.damage;
         this.collisionRadius = data.collisionRadius;
-        this.contactDamage = data.contactDamage;
+        this.contactDamage = structuredClone(data.contactDamage);
         this.buffs = data.buffs;
     }
 
@@ -34,12 +34,12 @@ export class Enemy {
             const speedBonus = this.buffs.speed.duration > 0 ? this.buffs.speed.multiplier : 1;
             this.x += normalizedDx * this.speed * speedBonus * deltaTime;
             this.y += normalizedDy * this.speed * speedBonus * deltaTime;
-        } else {
-            this.dealsContactDamage(player);
+        } else if (this.contactDamage.amount) {
+            this.dealContactDamage(player);
         }
     }
 
-    dealsContactDamage(player) {
+    dealContactDamage(player) {
         player.receivesDmgFrom(this);
     }
 }

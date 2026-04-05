@@ -2,13 +2,15 @@ export const playerData = {
     width: 64,
     height: 64,
     collisionRadius: 28,
+    health: {
+        max: 100
+    },
     movement: {
         velocity: { x: 0, y: 0 },
-        maxSpeed: 600,
+        maxSpeed: 400,
         acceleration: {
-            active: true,
-            rate: .8,
-            friction: 2,
+            rate: .9,
+            friction: 1,
         }
     },
     knockback: {

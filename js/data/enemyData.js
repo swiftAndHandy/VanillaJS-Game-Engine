@@ -6,7 +6,10 @@ export const enemyData = {
         speed: 80,
         damage: 1,
         collisionRadius: 24,
-        contactDamage: 1,
+        contactDamage: {
+            amount: 1,
+            pushBack: false,
+        },
         buffs: {
             speed: {
                 multiplier: 3,
