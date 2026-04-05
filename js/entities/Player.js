@@ -20,12 +20,11 @@ export class Player {
 
             const speedBonus = this.buffs.speed.duration > 0 ? this.buffs.speed.multiplier : 1;
 
-            this.x += dx * this.speed * speedBonus * deltaTime;
-            this.y += dy * this.speed * speedBonus * deltaTime;
+            this.x += dx * this.movement.maxSpeed * speedBonus * deltaTime;
+            this.y += dy * this.movement.maxSpeed * speedBonus * deltaTime;
         }
 
         this.handleDmgFeedback(deltaTime);
-
         this.inboundsCheck();
 
         if (inputManager.pressed('jump')) console.log('jump');
@@ -39,9 +38,8 @@ export class Player {
     reset() {
         this.width = playerData.width;
         this.height = playerData.height;
-        this.speed = playerData.speed;
         this.collisionRadius = playerData.collisionRadius;
-        this.velocity = structuredClone(playerData.velocity);
+        this.movement = structuredClone(playerData.movement);
         this.knockback = structuredClone(playerData.knockback);
         this.iFrames = structuredClone(playerData.iFrames);
         this.buffs = structuredClone(playerData.buffs);
