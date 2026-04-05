@@ -9,19 +9,43 @@ export class Player {
     update(deltaTime, inputManager) {
         let dx = inputManager.getAxis('horizontal');
         let dy = inputManager.getAxis('vertical');
+        const speedBonus = this.buffs.speed.duration > 0 ? this.buffs.speed.multiplier : 1;
 
         /**
          * Normalize diagonal movement speed and update player position
          **/
-        if (dx || dy) {
-            const len = Math.sqrt(dx * dx + dy * dy);
-            dx /= len;
-            dy /= len;
+        if (this.movement.acceleration.active) {
+            const maxSpeed = this.movement.maxSpeed * speedBonus;
 
-            const speedBonus = this.buffs.speed.duration > 0 ? this.buffs.speed.multiplier : 1;
+            // Target full maxSpeed per axis — divide by √2 diagonally to keep consistent total speed
+            const diagonalFactor = (dx && dy) ? Math.SQRT2 : 1;
+            const targetVx = dx ? Math.sign(dx) * (maxSpeed / diagonalFactor) : 0;
+            const targetVy = dy ? Math.sign(dy) * (maxSpeed / diagonalFactor) : 0;
 
-            this.x += dx * this.movement.maxSpeed * speedBonus * deltaTime;
-            this.y += dy * this.movement.maxSpeed * speedBonus * deltaTime;
+            // Lerp each axis independently — friction only when axis has no input
+            const lerpAccel = 1 - Math.pow(1 - this.movement.acceleration.rate, deltaTime);
+            const lerpFriction = 1 - Math.pow(this.movement.acceleration.friction / 10000, deltaTime);
+
+            this.movement.velocity.x += (targetVx - this.movement.velocity.x) * (dx ? lerpAccel : lerpFriction);
+            this.movement.velocity.y += (targetVy - this.movement.velocity.y) * (dy ? lerpAccel : lerpFriction);
+
+            this.x += this.movement.velocity.x * deltaTime;
+            this.y += this.movement.velocity.y * deltaTime;
+
+        } else {
+            if (dx || dy) {
+                const len = Math.sqrt(dx * dx + dy * dy);
+                dx /= len;
+                dy /= len;
+                const moveSpeed = this.movement.maxSpeed * speedBonus;
+                this.x += dx * moveSpeed * deltaTime;
+                this.y += dy * moveSpeed * deltaTime;
+                this.movement.velocity.x = dx * moveSpeed;
+                this.movement.velocity.y = dy * moveSpeed;
+            } else {
+                this.movement.velocity.x = 0;
+                this.movement.velocity.y = 0;
+            }
         }
 
         this.handleDmgFeedback(deltaTime);
