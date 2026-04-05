@@ -24,6 +24,8 @@ export class Player {
             this.y += dy * this.speed * speedBonus * deltaTime;
         }
 
+        this.handleDmgFeedback(deltaTime);
+
         this.inboundsCheck();
 
         if (inputManager.pressed('jump')) console.log('jump');
@@ -39,13 +41,16 @@ export class Player {
         this.height = playerData.height;
         this.speed = playerData.speed;
         this.collisionRadius = playerData.collisionRadius;
-        this.collisionPushback = playerData.collisionPushback;
-        this.buffs = playerData.buffs;
+        this.velocity = structuredClone(playerData.velocity);
+        this.knockback = structuredClone(playerData.knockback);
+        this.iFrames = structuredClone(playerData.iFrames);
+        this.buffs = structuredClone(playerData.buffs);
         this.x = (GAME_WIDTH - playerData.width) / 2;
         this.y = (GAME_HEIGHT - playerData.height) / 2;
     }
 
-    receivesContactDamageFrom(dmgSrc, deltaTime) {
+    receivesDmgFrom(dmgSrc, iFrameDuration = this.iFrames.baseDuration) {
+        if (this.iFrames.timer > 0) return;
         let dx = this.x - dmgSrc.x;
         let dy = this.y - dmgSrc.y;
 
@@ -54,9 +59,18 @@ export class Player {
         const normalizedDx = dx/len;
         const normalizedDy = dy/len;
 
-        this.x += normalizedDx * this.speed * this.collisionPushback * deltaTime;
-        this.y += normalizedDy * this.speed * this.collisionPushback * deltaTime;
-
+        this.knockback.velocity.x = normalizedDx * this.knockback.force;
+        this.knockback.velocity.y = normalizedDy * this.knockback.force;
         this.inboundsCheck();
+        this.iFrames.timer = iFrameDuration;
+        console.log(`${this.iFrames.timer}`);
+    }
+
+    handleDmgFeedback(deltaTime) {
+        this.x += this.knockback.velocity.x * deltaTime;
+        this.y += this.knockback.velocity.y * deltaTime;
+        this.knockback.velocity.x *= Math.pow(this.knockback.decay/100, deltaTime);
+        this.knockback.velocity.y *= Math.pow(this.knockback.decay/100, deltaTime);
+        this.iFrames.timer = Math.max(this.iFrames.timer - deltaTime, 0);
     }
 }

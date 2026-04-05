@@ -29,18 +29,17 @@ export class Enemy {
         const len = Math.sqrt(dx * dx + dy * dy);
 
         if (len > player.collisionRadius) {
-            console.table({x: this.x, y: this.y, 'speed': this.speed});
             const normalizedDx = dx/len;
             const normalizedDy = dy/len;
             const speedBonus = this.buffs.speed.duration > 0 ? this.buffs.speed.multiplier : 1;
             this.x += normalizedDx * this.speed * speedBonus * deltaTime;
             this.y += normalizedDy * this.speed * speedBonus * deltaTime;
         } else {
-            this.dealsContactDamage(deltaTime, player);
+            this.dealsContactDamage(player);
         }
     }
 
-    dealsContactDamage(deltaTime, player) {
-        player.receivesContactDamageFrom(this, deltaTime);
+    dealsContactDamage(player) {
+        player.receivesDmgFrom(this);
     }
 }
