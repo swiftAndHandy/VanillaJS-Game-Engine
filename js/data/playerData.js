@@ -10,7 +10,7 @@ export const playerData = {
         maxSpeed: 400,
         acceleration: {
             rate: .9,
-            friction: 1,
+            friction: 0.1,
         }
     },
     knockback: {

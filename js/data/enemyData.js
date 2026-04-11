@@ -3,7 +3,14 @@ export const enemyData = {
         width: 48,
         height: 48,
         health: 1,
-        speed: 80,
+        movement: {
+            velocity: { x: 0, y: 0 },
+            maxSpeed: 150,
+            acceleration: {
+                rate: 1,
+                friction: 1,
+            }
+        },
         damage: 1,
         collisionRadius: 24,
         contactDamage: {
@@ -12,7 +19,7 @@ export const enemyData = {
         },
         buffs: {
             speed: {
-                multiplier: 3,
+                multiplier: 1,
                 duration: 300,
             }
         }

@@ -89,7 +89,14 @@ export class Game {
     resetGame() {
         this.lastTimestamp = performance.now();
         this.player.reset();
+        this.enemyManager.reset();
         this.enemyManager.spawn(200, 200);
+        this.enemyManager.spawn(100, 300);
+        this.enemyManager.spawn(300, 400);
+        this.enemyManager.spawn(800, 600);
+        this.enemyManager.spawn(1100, 800);
+
+
     }
 
     returnToMainMenu() {
