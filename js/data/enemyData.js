@@ -43,7 +43,7 @@ export const enemyData = {
         collisionRadius: 24,
         contactDamage: {
             amount: 1,
-            pushBack: false,
+            pushBack: true,
         },
         buffs: {
             speed: {

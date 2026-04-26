@@ -56,6 +56,16 @@ export class Enemy {
             behaviour.update(this, deltaTime, player);
         });
 
+        // Contact damage check — behaviour-agnostic
+        if (this.contactDamage.amount > 0) {
+            const dx = player.x + player.width / 2 - (this.x + this.width / 2);
+            const dy = player.y + player.height / 2 - (this.y + this.height / 2);
+            const len = Math.sqrt(dx * dx + dy * dy);
+            if (len <= this.collisionRadius) {
+                this.dealContactDamage(player);
+            }
+        }
+
     }
 
     dealContactDamage(player) {

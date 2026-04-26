@@ -3,7 +3,7 @@ export class SeekBehaviour {
         const dx = player.x + player.width/2 - (enemy.x + enemy.width/2);
         const dy = player.y + player.height/2 - (enemy.y + enemy.height/2);
         const len = Math.sqrt(dx * dx + dy * dy);
-        if (len > player.collisionRadius) {
+        // if (len > player.collisionRadius) {
             const speedBonus = enemy.buffs.speed.duration > 0 ? enemy.buffs.speed.multiplier : 1;
             const maxSpeed = enemy.movement.maxSpeed * speedBonus;
 
@@ -21,8 +21,6 @@ export class SeekBehaviour {
 
             enemy.x += enemy.movement.velocity.x * deltaTime;
             enemy.y += enemy.movement.velocity.y * deltaTime;
-        } else if (enemy.contactDamage.amount) {
-            enemy.dealContactDamage(player);
-        }
+        // }
     }
 }
