@@ -25,6 +25,7 @@ export const enemyData = {
             }
         },
         fallbackColor: '#ff4444',
+        sprite: 'drifter',
     },
     seeker: {
         behaviours: ['seek'],
@@ -52,5 +53,6 @@ export const enemyData = {
             }
         },
         fallbackColor: '#cc8800',
+        sprite: 'seeker',
     }
 }

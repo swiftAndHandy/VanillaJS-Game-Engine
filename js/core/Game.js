@@ -2,11 +2,12 @@ import {ASPECT_RATIO, CANVAS_MARGIN, GAME_HEIGHT, GAME_WIDTH} from "./constants.
 import {RenderSystem} from "../systems/RenderSystem.js";
 import {Player} from "../entities/Player.js";
 import {InputManager} from "../managers/input/InputManager.js";
-import {ImageManager} from "../managers/ImageManager.js";
+import {SpriteManager} from "../managers/SpriteManager.js";
 import {AudioManager} from "../managers/AudioManager.js";
 import {ScenePhaseManager} from "../managers/ScenePhaseManager.js";
 import {UiManager} from "../managers/UiManager.js";
 import { EnemyManager } from "../managers/EnemyManager.js";
+import {EnemySpawner} from "../managers/EnemySpawner.js";
 
 export class Game {
     constructor() {
@@ -14,18 +15,19 @@ export class Game {
         this.sceneManager = new ScenePhaseManager();
         this.uiManager = new UiManager(this);
         this.inputManager = new InputManager();
-        this.imageManager = new ImageManager();
+        this.spriteManager = new SpriteManager();
         this.audioManager = new AudioManager();
-        this.renderSystem = new RenderSystem(this.canvas, this.imageManager);
+        this.renderSystem = new RenderSystem(this.canvas, this.spriteManager);
         this.player = new Player();
         this.enemyManager = new EnemyManager();
+        this.enemySpawner = new EnemySpawner(this.enemyManager);
 
         this.init()
     }
 
     async init() {
         await Promise.all([
-            this.imageManager.loadAll(),
+            this.spriteManager.loadAll(),
             this.audioManager.loadAll()
         ]);
         this.resizeCanvas();
@@ -61,8 +63,9 @@ export class Game {
 
     update(deltaTime) {
         if (!this.sceneManager.playingScenePhaseIsActive()) return;
-        this.enemyManager.update(deltaTime, this.player);
         this.player.update(deltaTime, this.inputManager);
+        this.enemyManager.update(deltaTime, this.player);
+        this.enemySpawner.update(deltaTime);
     }
 
     startGame() {
@@ -90,12 +93,7 @@ export class Game {
         this.lastTimestamp = performance.now();
         this.player.reset();
         this.enemyManager.reset();
-        this.enemyManager.spawn('drifter', 200, 200);
-        this.enemyManager.spawn('drifter',100, 300);
-        this.enemyManager.spawn('drifter',300, 400);
-        this.enemyManager.spawn('seeker',350, 400);
-        this.enemyManager.spawn('seeker',800, 600);
-        this.enemyManager.spawn('seeker', 1100, 800);
+        this.enemySpawner.reset();
     }
 
     returnToMainMenu() {

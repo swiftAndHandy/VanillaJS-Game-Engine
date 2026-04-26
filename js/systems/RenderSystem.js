@@ -1,11 +1,11 @@
 import {GAME_HEIGHT, GAME_WIDTH, GRID_SIZE, IMAGE_SMOOTHING_ENABLED} from "../core/constants.js";
 
 export class RenderSystem {
-    constructor(canvas, imageManager) {
+    constructor(canvas, spriteManager) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.ctx.imageSmoothingEnabled = IMAGE_SMOOTHING_ENABLED;
-        this.imageManager = imageManager;
+        this.spriteManager = spriteManager;
     }
 
     render(player, enemies = []) {
@@ -25,7 +25,7 @@ export class RenderSystem {
     }
 
     renderPlayer(player) {
-        const playerImage = this.imageManager.get('player');
+        const playerImage = this.spriteManager.get('player');
         if (playerImage) {
             this.ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
         } else {

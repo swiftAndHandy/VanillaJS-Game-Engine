@@ -1,6 +1,6 @@
-export class ImageManager {
+export class SpriteManager {
     constructor() {
-        this.images = {};
+        this.sprites = {};
     }
 
     load(name, path) {
@@ -8,10 +8,10 @@ export class ImageManager {
             const img = new Image();
             img.src = path;
 
-            this.images[name] = { img, loaded: false };
+            this.sprites[name] = { img, loaded: false };
 
             img.onload = () => {
-                this.images[name].loaded = true;
+                this.sprites[name].loaded = true;
                 console.log(`[DEV] Image loaded: ${name}`);
                 resolve();
             };
@@ -24,7 +24,7 @@ export class ImageManager {
     }
 
     get(name) {
-        return this.images[name]?.loaded ? this.images[name].img : null;
+        return this.sprites[name]?.loaded ? this.sprites[name].img : null;
     }
 
     async loadAll() {
