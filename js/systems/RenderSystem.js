@@ -19,8 +19,22 @@ export class RenderSystem {
     renderEnemies(enemies = []) {
         for (let i = 0; i < enemies.length; i++) {
             const enemy = enemies[i];
-            this.ctx.fillStyle = enemy.data.fallbackColor;
-            this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+            const enemySprite = this.spriteManager.get(`enemy_${enemy.data.sprite}`);
+            if (enemySprite) {
+                this.ctx.save();
+                if (enemy.orientation.facingWest) {
+                    this.ctx.translate(enemy.x + enemy.width, enemy.y);
+                    this.ctx.scale(-1, 1);
+                    this.ctx.drawImage(enemySprite, 0, 0, enemy.width, enemy.height)
+
+                } else {
+                    this.ctx.drawImage(enemySprite, enemy.x, enemy.y, enemy.width, enemy.height)
+                }
+                this.ctx.restore();
+            } else {
+                this.ctx.fillStyle = enemy.data.fallbackColor;
+                this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+            }
         }
     }
 

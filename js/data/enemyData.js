@@ -1,8 +1,8 @@
 export const enemyData = {
     drifter: {
         behaviours: ['drift'],
-        width: 20,
-        height: 20,
+        width: 48,
+        height: 48,
         health: 1,
         movement: {
             velocity: { x: 0, y: 0 },
@@ -11,6 +11,10 @@ export const enemyData = {
                 rate: 1,
                 friction: 1,
             }
+        },
+        orientation: {
+            facingWest: false,
+            facingNorth: false,
         },
         damage: 1,
         collisionRadius: 24,
@@ -29,8 +33,8 @@ export const enemyData = {
     },
     seeker: {
         behaviours: ['seek'],
-        width: 48,
-        height: 48,
+        width: 38,
+        height: 25,
         health: 1,
         movement: {
             velocity: { x: 0, y: 0 },
@@ -39,6 +43,10 @@ export const enemyData = {
                 rate: 1,
                 friction: 1,
             }
+        },
+        orientation: {
+            facingWest: false,
+            facingNorth: false,
         },
         damage: 1,
         collisionRadius: 24,

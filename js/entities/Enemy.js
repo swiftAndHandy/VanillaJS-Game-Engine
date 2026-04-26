@@ -30,6 +30,7 @@ export class Enemy {
         this.damage = this.data.damage;
         this.collisionRadius = this.data.collisionRadius;
         this.contactDamage = structuredClone(this.data.contactDamage);
+        this.orientation = structuredClone(this.data.orientation);
         this.buffs = structuredClone(this.data.buffs);
 
         this.behaviours.forEach(behaviour => {
@@ -52,9 +53,15 @@ export class Enemy {
             return;
         }
 
+        let oldX = this.x;
+        let oldY = this.y;
+
         this.behaviours.forEach(behaviour => {
             behaviour.update(this, deltaTime, player);
         });
+
+        this.orientation.facingWest = this.x <= oldX;
+        this.orientation.facingNorth = this.y <= oldY;
 
         // Contact damage check — behaviour-agnostic
         if (this.contactDamage.amount > 0) {

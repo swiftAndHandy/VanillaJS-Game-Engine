@@ -30,6 +30,8 @@ export class SpriteManager {
     async loadAll() {
         await Promise.all([
             this.load('player', './images/player.png'),
+            this.load('enemy_drifter', './images/enemies/drifter/drifter.png'),
+            this.load('enemy_seeker', './images/enemies/seeker/seeker.png'),
         ]);
 
         // TODO: REMOVE BEFORE SHIPPING
