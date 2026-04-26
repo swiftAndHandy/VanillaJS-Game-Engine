@@ -38,7 +38,7 @@ export const enemyData = {
         health: 1,
         movement: {
             velocity: { x: 0, y: 0 },
-            maxSpeed: 150,
+            maxSpeed: 250,
             acceleration: {
                 rate: 1,
                 friction: 1,

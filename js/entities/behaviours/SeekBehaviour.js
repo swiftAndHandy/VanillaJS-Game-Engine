@@ -7,17 +7,21 @@ export class SeekBehaviour {
             const speedBonus = enemy.buffs.speed.duration > 0 ? enemy.buffs.speed.multiplier : 1;
             const maxSpeed = enemy.movement.maxSpeed * speedBonus;
 
+            // Axis lock — stop moving on an axis if already within collision range on it
+            const activeDx = Math.abs(dx) > enemy.collisionRadius ? dx : 0;
+            const activeDy = Math.abs(dy) > enemy.collisionRadius ? dy : 0;
+
             // Target full maxSpeed per axis — divide by √2 diagonally to keep consistent total speed
-            const diagonalFactor = (dx && dy) ? Math.SQRT2 : 1;
-            const targetVx = dx ? Math.sign(dx) * (maxSpeed / diagonalFactor) : 0;
-            const targetVy = dy ? Math.sign(dy) * (maxSpeed / diagonalFactor) : 0;
+            const diagonalFactor = (activeDx && activeDy) ? Math.SQRT2 : 1;
+            const targetVx = activeDx ? Math.sign(activeDx) * (maxSpeed / diagonalFactor) : 0;
+            const targetVy = activeDy ? Math.sign(activeDy) * (maxSpeed / diagonalFactor) : 0;
 
             // Lerp each axis independently — friction only when axis has no input
             const lerpAccel = 1 - Math.pow(1 - enemy.movement.acceleration.rate, deltaTime);
             const lerpFriction = 1 - Math.pow(enemy.movement.acceleration.friction / 10000, deltaTime);
 
-            enemy.movement.velocity.x += (targetVx - enemy.movement.velocity.x) * (dx ? lerpAccel : lerpFriction);
-            enemy.movement.velocity.y += (targetVy - enemy.movement.velocity.y) * (dy ? lerpAccel : lerpFriction);
+            enemy.movement.velocity.x += (targetVx - enemy.movement.velocity.x) * (activeDx ? lerpAccel : lerpFriction);
+            enemy.movement.velocity.y += (targetVy - enemy.movement.velocity.y) * (activeDy ? lerpAccel : lerpFriction);
 
             enemy.x += enemy.movement.velocity.x * deltaTime;
             enemy.y += enemy.movement.velocity.y * deltaTime;

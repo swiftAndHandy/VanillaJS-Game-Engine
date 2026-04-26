@@ -37,8 +37,8 @@ export class Player {
         this.iFrames.timer = iFrameDuration;
 
         if (dmgSrc.contactDamage.pushBack) {
-            let dx = this.x - dmgSrc.x;
-            let dy = this.y - dmgSrc.y;
+            let dx = (this.x + this.width / 2) - (dmgSrc.x + dmgSrc.width / 2);
+            let dy = (this.y + this.height / 2) - (dmgSrc.y + dmgSrc.height / 2);
 
             const len = Math.sqrt(dx * dx + dy * dy);
 

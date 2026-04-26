@@ -53,15 +53,12 @@ export class Enemy {
             return;
         }
 
-        let oldX = this.x;
-        let oldY = this.y;
-
         this.behaviours.forEach(behaviour => {
             behaviour.update(this, deltaTime, player);
         });
 
-        this.orientation.facingWest = this.x <= oldX;
-        this.orientation.facingNorth = this.y <= oldY;
+        if (Math.abs(this.movement.velocity.x) > 0.5) this.orientation.facingWest = this.movement.velocity.x < 0;
+        if (Math.abs(this.movement.velocity.y) > 0.5) this.orientation.facingNorth = this.movement.velocity.y < 0;
 
         // Contact damage check — behaviour-agnostic
         if (this.contactDamage.amount > 0) {
