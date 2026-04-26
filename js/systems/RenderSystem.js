@@ -19,7 +19,7 @@ export class RenderSystem {
     renderEnemies(enemies = []) {
         for (let i = 0; i < enemies.length; i++) {
             const enemy = enemies[i];
-            this.ctx.fillStyle = "#ff3460";
+            this.ctx.fillStyle = enemy.data.fallbackColor;
             this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
         }
     }

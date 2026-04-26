@@ -1,8 +1,10 @@
 import {GAME_HEIGHT, GAME_WIDTH, ENEMY_DESPAWN_MARGIN} from "../core/constants.js";
+import {BehaviourFactory} from "./behaviours/BehaviourFactory.js";
 export class Enemy {
     constructor(data, behaviours) {
         this.data = data;
-        this.reset(behaviours);
+        this.behaviours = BehaviourFactory.create(data.behaviours);
+        this.reset();
     }
 
     spawn(x, y) {
@@ -12,9 +14,9 @@ export class Enemy {
         this.active = true;
     }
 
-    reset(behaviours) {
+    reset() {
         this.active = false;
-        this.behaviours = behaviours;
+        this.behaviours = BehaviourFactory.create(this.data.behaviours);
 
         // Position and dimensions
         this.x = 0;
@@ -51,7 +53,6 @@ export class Enemy {
         }
 
         this.behaviours.forEach(behaviour => {
-            console.log("behaviour", behaviour);
             behaviour.update(this, deltaTime, player);
         });
 

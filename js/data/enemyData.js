@@ -16,14 +16,15 @@ export const enemyData = {
         collisionRadius: 24,
         contactDamage: {
             amount: 1,
-            pushBack: false,
+            pushBack: true,
         },
         buffs: {
             speed: {
                 multiplier: 1,
                 duration: 300,
             }
-        }
+        },
+        fallbackColor: '#ff4444',
     },
     seeker: {
         behaviours: ['seek'],
@@ -49,6 +50,7 @@ export const enemyData = {
                 multiplier: 1,
                 duration: 300,
             }
-        }
+        },
+        fallbackColor: '#cc8800',
     }
 }
