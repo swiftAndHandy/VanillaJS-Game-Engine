@@ -9,7 +9,7 @@ export const enemyData = {
             maxSpeed: 50,
             acceleration: {
                 rate: 1,
-                friction: 1,
+                responseTime: 1,
             }
         },
         orientation: {
@@ -17,7 +17,7 @@ export const enemyData = {
             facingNorth: false,
         },
         damage: 1,
-        collisionRadius: 24,
+        collisionRadius: 48,
         contactDamage: {
             amount: 1,
             pushBack: true,
@@ -38,10 +38,10 @@ export const enemyData = {
         health: 1,
         movement: {
             velocity: { x: 0, y: 0 },
-            maxSpeed: 250,
+            maxSpeed: 240,
             acceleration: {
-                rate: 1,
-                friction: 1,
+                rate: 0.8,
+                responseTime: 1,
             }
         },
         orientation: {

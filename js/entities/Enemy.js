@@ -60,12 +60,11 @@ export class Enemy {
         if (Math.abs(this.movement.velocity.x) > 0.5) this.orientation.facingWest = this.movement.velocity.x < 0;
         if (Math.abs(this.movement.velocity.y) > 0.5) this.orientation.facingNorth = this.movement.velocity.y < 0;
 
-        // Contact damage check — behaviour-agnostic
+        // Contact damage check — behaviour-agnostic, box check matches axis lock in SeekBehaviour
         if (this.contactDamage.amount > 0) {
             const dx = player.x + player.width / 2 - (this.x + this.width / 2);
             const dy = player.y + player.height / 2 - (this.y + this.height / 2);
-            const len = Math.sqrt(dx * dx + dy * dy);
-            if (len <= this.collisionRadius) {
+            if (Math.abs(dx) <= this.collisionRadius && Math.abs(dy) <= this.collisionRadius) {
                 this.dealContactDamage(player);
             }
         }

@@ -75,12 +75,12 @@ export class Player {
         const targetVx = dx ? Math.sign(dx) * (maxSpeed / diagonalFactor) : 0;
         const targetVy = dy ? Math.sign(dy) * (maxSpeed / diagonalFactor) : 0;
 
-        // Lerp each axis independently — friction only when axis has no input
+        // Lerp each axis independently — responseTime only when axis has no input
         const lerpAccel = 1 - Math.pow(1 - this.movement.acceleration.rate, deltaTime);
-        const lerpFriction = 1 - Math.pow(this.movement.acceleration.friction / 10000, deltaTime);
+        const lerpFactor = 1 - Math.exp(-deltaTime / this.movement.acceleration.responseTime);
 
-        this.movement.velocity.x += (targetVx - this.movement.velocity.x) * (dx ? lerpAccel : lerpFriction);
-        this.movement.velocity.y += (targetVy - this.movement.velocity.y) * (dy ? lerpAccel : lerpFriction);
+        this.movement.velocity.x += (targetVx - this.movement.velocity.x) * (dx ? lerpAccel : lerpFactor);
+        this.movement.velocity.y += (targetVy - this.movement.velocity.y) * (dy ? lerpAccel : lerpFactor);
 
         this.x += this.movement.velocity.x * deltaTime;
         this.y += this.movement.velocity.y * deltaTime;

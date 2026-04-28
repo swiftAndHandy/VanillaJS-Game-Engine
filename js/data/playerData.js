@@ -7,10 +7,10 @@ export const playerData = {
     },
     movement: {
         velocity: { x: 0, y: 0 },
-        maxSpeed: 400,
+        maxSpeed: 200,
         acceleration: {
             rate: .9,
-            friction: 0.1,
+            responseTime: 0.1,
         }
     },
     knockback: {

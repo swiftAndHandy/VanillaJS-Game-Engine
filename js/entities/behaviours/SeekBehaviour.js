@@ -16,12 +16,12 @@ export class SeekBehaviour {
             const targetVx = activeDx ? Math.sign(activeDx) * (maxSpeed / diagonalFactor) : 0;
             const targetVy = activeDy ? Math.sign(activeDy) * (maxSpeed / diagonalFactor) : 0;
 
-            // Lerp each axis independently — friction only when axis has no input
+            // Lerp each axis independently — responseTime only when axis has no input
             const lerpAccel = 1 - Math.pow(1 - enemy.movement.acceleration.rate, deltaTime);
-            const lerpFriction = 1 - Math.pow(enemy.movement.acceleration.friction / 10000, deltaTime);
+            const lerpFactor = 1 - Math.exp(-deltaTime / enemy.movement.acceleration.responseTime);
 
-            enemy.movement.velocity.x += (targetVx - enemy.movement.velocity.x) * (activeDx ? lerpAccel : lerpFriction);
-            enemy.movement.velocity.y += (targetVy - enemy.movement.velocity.y) * (activeDy ? lerpAccel : lerpFriction);
+            enemy.movement.velocity.x += (targetVx - enemy.movement.velocity.x) * (activeDx ? lerpAccel : lerpFactor);
+            enemy.movement.velocity.y += (targetVy - enemy.movement.velocity.y) * (activeDy ? lerpAccel : lerpFactor);
 
             enemy.x += enemy.movement.velocity.x * deltaTime;
             enemy.y += enemy.movement.velocity.y * deltaTime;
