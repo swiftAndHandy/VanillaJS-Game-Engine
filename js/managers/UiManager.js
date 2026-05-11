@@ -1,5 +1,6 @@
-export class UiManager {
+import { EVENTS } from "../core/constants.js";
 
+export class UiManager {
     #mainMenu
     #timer
     #pauseMenu
@@ -10,8 +11,8 @@ export class UiManager {
     #uiPanels
     #buttons
 
-    constructor(game) {
-        this.game = game;
+    constructor(events) {
+        this.events = events;
         this.#mainMenu = document.getElementById("mainMenu");
         this.#timer = document.getElementById("timer");
         this.#pauseMenu = document.getElementById('pauseMenu');
@@ -28,20 +29,20 @@ export class UiManager {
 
     setupUI() {
         this.#playButton.addEventListener('click', () => {
-            this.game.startGame();
+            this.events.emit(EVENTS.GAME_START);
         });
 
         this.#resumeButton.addEventListener('click', () => {
-            this.game.resumeGame();
+            this.events.emit(EVENTS.GAME_RESUME);
         });
 
         this.#quitButton.addEventListener('click', () => {
-            this.game.returnToMainMenu();
+            this.events.emit(EVENTS.GAME_RETURN_TO_MENU);
         });
 
         this.#buttons.forEach(button => {
             button.addEventListener('mouseenter', () => {
-                this.game.playSound('button_hover');
+                this.events.emit(EVENTS.SOUND, 'button_hover');
             });
         })
     }

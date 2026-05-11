@@ -17,7 +17,9 @@ export const enemyData = {
             facingNorth: false,
         },
         damage: 1,
-        collisionRadius: 48,
+        hitbox: {
+            margin: { top: 5, right: 5, bottom: 5, left: 5 }
+        },
         contactDamage: {
             amount: 1,
             pushBack: true,
@@ -49,7 +51,9 @@ export const enemyData = {
             facingNorth: false,
         },
         damage: 1,
-        collisionRadius: 24,
+        hitbox: {
+            margin: { top: 5, right: 5, bottom: 5, left: 5 }
+        },
         contactDamage: {
             amount: 1,
             pushBack: true,

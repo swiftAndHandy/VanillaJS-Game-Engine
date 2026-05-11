@@ -1,19 +1,21 @@
-import {ASPECT_RATIO, CANVAS_MARGIN, GAME_HEIGHT, GAME_WIDTH} from "./constants.js";
-import {RenderSystem} from "../systems/RenderSystem.js";
-import {Player} from "../entities/Player.js";
-import {InputManager} from "../managers/input/InputManager.js";
-import {SpriteManager} from "../managers/SpriteManager.js";
-import {AudioManager} from "../managers/AudioManager.js";
-import {ScenePhaseManager} from "../managers/ScenePhaseManager.js";
-import {UiManager} from "../managers/UiManager.js";
+import { ASPECT_RATIO, CANVAS_MARGIN, GAME_HEIGHT, GAME_WIDTH, EVENTS } from "./constants.js";
+import { RenderSystem } from "../systems/RenderSystem.js";
+import { Player } from "../entities/Player.js";
+import { InputManager } from "../managers/input/InputManager.js";
+import { SpriteManager } from "../managers/SpriteManager.js";
+import { AudioManager } from "../managers/AudioManager.js";
+import { ScenePhaseManager } from "../managers/ScenePhaseManager.js";
+import { UiManager } from "../managers/UiManager.js";
 import { EnemyManager } from "../managers/EnemyManager.js";
-import {EnemySpawner} from "../managers/EnemySpawner.js";
+import { EnemySpawner } from "../managers/EnemySpawner.js";
+import { EventEmitter } from "./EventEmitter.js";
 
 export class Game {
     constructor() {
         this.canvas = document.getElementById("gameCanvas");
+        this.events = new EventEmitter();
         this.sceneManager = new ScenePhaseManager();
-        this.uiManager = new UiManager(this);
+        this.uiManager = new UiManager(this.events);
         this.inputManager = new InputManager();
         this.spriteManager = new SpriteManager();
         this.audioManager = new AudioManager();
@@ -30,6 +32,16 @@ export class Game {
             this.spriteManager.loadAll(),
             this.audioManager.loadAll()
         ]);
+
+        // Sound events
+        this.events.on(EVENTS.SOUND, (name) => this.audioManager.play(name));
+
+        // Game state events
+        this.events.on(EVENTS.GAME_START, () => this.startGame());
+        this.events.on(EVENTS.GAME_PAUSED, () => this.pauseGame());
+        this.events.on(EVENTS.GAME_RESUME, () => this.resumeGame());
+        this.events.on(EVENTS.GAME_RETURN_TO_MENU, () => this.returnToMainMenu());
+
         this.resizeCanvas();
         window.addEventListener("resize", () => this.resizeCanvas());
         this.uiManager.showMainMenu();
@@ -69,7 +81,7 @@ export class Game {
     }
 
     startGame() {
-        this.playSound('button_click');
+        this.events.emit(EVENTS.SOUND, 'button_click');
         this.sceneManager.setScenePhaseToPlaying();
         this.uiManager.hideAllPanels();
         this.uiManager.showTimer();
@@ -79,13 +91,13 @@ export class Game {
 
     pauseGame() {
         this.sceneManager.setScenePhaseToPaused();
-        this.playSound('pause');
+        this.events.emit(EVENTS.SOUND, 'pause');
         this.uiManager.showPauseMenu();
     }
 
     resumeGame() {
         this.sceneManager.setScenePhaseToPlaying();
-        this.playSound('unpause')
+        this.events.emit(EVENTS.SOUND, 'unpause');
         this.uiManager.hidePauseMenu();
     }
 
@@ -98,13 +110,9 @@ export class Game {
 
     returnToMainMenu() {
         this.sceneManager.setScenePhaseToMenu();
-        this.playSound('button_click');
+        this.events.emit(EVENTS.SOUND, 'button_click');
         this.uiManager.hideTimer();
         this.uiManager.showMainMenu();
-    }
-
-    playSound(name) {
-        this.audioManager.play(name);
     }
 
     resizeCanvas() {

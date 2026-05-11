@@ -28,7 +28,7 @@ export class Enemy {
         this.health = this.data.health;
         this.movement = structuredClone(this.data.movement);
         this.damage = this.data.damage;
-        this.collisionRadius = this.data.collisionRadius;
+        this.hitbox = structuredClone(this.data.hitbox);
         this.contactDamage = structuredClone(this.data.contactDamage);
         this.orientation = structuredClone(this.data.orientation);
         this.buffs = structuredClone(this.data.buffs);
@@ -60,15 +60,30 @@ export class Enemy {
         if (Math.abs(this.movement.velocity.x) > 0.5) this.orientation.facingWest = this.movement.velocity.x < 0;
         if (Math.abs(this.movement.velocity.y) > 0.5) this.orientation.facingNorth = this.movement.velocity.y < 0;
 
-        // Contact damage check — behaviour-agnostic, box check matches axis lock in SeekBehaviour
+        // Contact damage check — AABB hitbox overlap
         if (this.contactDamage.amount > 0) {
-            const dx = player.x + player.width / 2 - (this.x + this.width / 2);
-            const dy = player.y + player.height / 2 - (this.y + this.height / 2);
-            if (Math.abs(dx) <= this.collisionRadius && Math.abs(dy) <= this.collisionRadius) {
+            const ehb = this.getHitbox();
+            const phb = player.getHitbox();
+            if (ehb.x < phb.x + phb.width  &&
+                ehb.x + ehb.width  > phb.x  &&
+                ehb.y < phb.y + phb.height  &&
+                ehb.y + ehb.height > phb.y) {
                 this.dealContactDamage(player);
             }
         }
 
+    }
+
+    getHitbox() {
+        const facingWest = this.orientation?.facingWest ?? false;
+        const mL = facingWest ? this.hitbox.margin.right : this.hitbox.margin.left;
+        const mR = facingWest ? this.hitbox.margin.left  : this.hitbox.margin.right;
+        return {
+            x:      this.x + mL,
+            y:      this.y + this.hitbox.margin.top,
+            width:  this.width  - mL - mR,
+            height: this.height - this.hitbox.margin.top - this.hitbox.margin.bottom,
+        };
     }
 
     dealContactDamage(player) {

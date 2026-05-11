@@ -8,3 +8,13 @@ export const IMAGE_SMOOTHING_ENABLED = false;
 export const ENEMY_DESPAWN_MARGIN = 200;
 export const ENEMY_SPAWN_MARGIN = 100;
 export const ENEMY_SPAWN_INTERVAL = 2;
+
+export const EVENTS = {
+    // Audio
+    SOUND: 'sound',
+    // Game state,
+    GAME_START: 'game:start',
+    GAME_PAUSED: 'game:paused',
+    GAME_RESUME: 'game:resume',
+    GAME_RETURN_TO_MENU: 'game:returnToMenu',
+}

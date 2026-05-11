@@ -12,29 +12,39 @@ export class RenderSystem {
         this.ctx.fillStyle = "#0f3460";
         this.ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
         this.renderGrid();
-        this.renderEnemies(enemies);
-        this.renderPlayer(player);
+
+        // Depth sort — sort by hitbox bottom (feet position) so entities higher on screen appear behind
+        const entities = [...enemies.filter(e => e.active), player]
+            .sort((a, b) => {
+                const aHb = a.getHitbox();
+                const bHb = b.getHitbox();
+                return (aHb.y + aHb.height) - (bHb.y + bHb.height);
+            });
+
+        for (const entity of entities) {
+            if (entity === player) {
+                this.renderPlayer(player);
+            } else {
+                this.renderEnemy(entity);
+            }
+        }
     }
 
-    renderEnemies(enemies = []) {
-        for (let i = 0; i < enemies.length; i++) {
-            const enemy = enemies[i];
-            const enemySprite = this.spriteManager.get(`enemy_${enemy.data.sprite}`);
-            if (enemySprite) {
-                this.ctx.save();
-                if (enemy.orientation.facingWest) {
-                    this.ctx.translate(enemy.x + enemy.width, enemy.y);
-                    this.ctx.scale(-1, 1);
-                    this.ctx.drawImage(enemySprite, 0, 0, enemy.width, enemy.height)
-
-                } else {
-                    this.ctx.drawImage(enemySprite, enemy.x, enemy.y, enemy.width, enemy.height)
-                }
-                this.ctx.restore();
+    renderEnemy(enemy) {
+        const enemySprite = this.spriteManager.get(`enemy_${enemy.data.sprite}`);
+        if (enemySprite) {
+            this.ctx.save();
+            if (enemy.orientation.facingWest) {
+                this.ctx.translate(enemy.x + enemy.width, enemy.y);
+                this.ctx.scale(-1, 1);
+                this.ctx.drawImage(enemySprite, 0, 0, enemy.width, enemy.height);
             } else {
-                this.ctx.fillStyle = enemy.data.fallbackColor;
-                this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                this.ctx.drawImage(enemySprite, enemy.x, enemy.y, enemy.width, enemy.height);
             }
+            this.ctx.restore();
+        } else {
+            this.ctx.fillStyle = enemy.data.fallbackColor;
+            this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
         }
     }
 

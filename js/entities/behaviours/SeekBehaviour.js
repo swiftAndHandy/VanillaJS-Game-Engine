@@ -7,9 +7,15 @@ export class SeekBehaviour {
             const speedBonus = enemy.buffs.speed.duration > 0 ? enemy.buffs.speed.multiplier : 1;
             const maxSpeed = enemy.movement.maxSpeed * speedBonus;
 
-            // Axis lock — stop moving on an axis if already within collision range on it
-            const activeDx = Math.abs(dx) > enemy.collisionRadius ? dx : 0;
-            const activeDy = Math.abs(dy) > enemy.collisionRadius ? dy : 0;
+            // Axis lock — stop moving on an axis when hitboxes are adjacent on it
+            const ehb = enemy.getHitbox();
+            const phb = player.getHitbox();
+            const centerDx = (ehb.x + ehb.width / 2) - (phb.x + phb.width / 2);
+            const centerDy = (ehb.y + ehb.height / 2) - (phb.y + phb.height / 2);
+            const lockX = ehb.width / 2 + phb.width / 2;
+            const lockY = ehb.height / 2 + phb.height / 2;
+            const activeDx = Math.abs(centerDx) > lockX ? dx : 0;
+            const activeDy = Math.abs(centerDy) > lockY ? dy : 0;
 
             // Target full maxSpeed per axis — divide by √2 diagonally to keep consistent total speed
             const diagonalFactor = (activeDx && activeDy) ? Math.SQRT2 : 1;

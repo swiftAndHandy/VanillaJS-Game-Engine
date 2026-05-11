@@ -19,11 +19,23 @@ export class Player {
         this.y = Math.max(0, Math.min(GAME_HEIGHT - this.height, this.y));
     }
 
+    getHitbox() {
+        const facingWest = this.orientation?.facingWest ?? false;
+        const mL = facingWest ? this.hitbox.margin.right : this.hitbox.margin.left;
+        const mR = facingWest ? this.hitbox.margin.left  : this.hitbox.margin.right;
+        return {
+            x:      this.x + mL,
+            y:      this.y + this.hitbox.margin.top,
+            width:  this.width  - mL - mR,
+            height: this.height - this.hitbox.margin.top - this.hitbox.margin.bottom,
+        };
+    }
+
     reset() {
         this.width = playerData.width;
         this.height = playerData.height;
         this.health = { ...playerData.health, current: playerData.health.max };
-        this.collisionRadius = playerData.collisionRadius;
+        this.hitbox = structuredClone(playerData.hitbox);
         this.movement = structuredClone(playerData.movement);
         this.knockback = structuredClone(playerData.knockback);
         this.iFrames = structuredClone(playerData.iFrames);
@@ -37,8 +49,10 @@ export class Player {
         this.iFrames.timer = iFrameDuration;
 
         if (dmgSrc.contactDamage.pushBack) {
-            let dx = (this.x + this.width / 2) - (dmgSrc.x + dmgSrc.width / 2);
-            let dy = (this.y + this.height / 2) - (dmgSrc.y + dmgSrc.height / 2);
+            const phb = this.getHitbox();
+            const ehb = dmgSrc.getHitbox();
+            let dx = (phb.x + phb.width / 2) - (ehb.x + ehb.width / 2);
+            let dy = (phb.y + phb.height / 2) - (ehb.y + ehb.height / 2);
 
             const len = Math.sqrt(dx * dx + dy * dy);
 
