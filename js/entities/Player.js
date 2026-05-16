@@ -64,10 +64,8 @@ export class Player {
         this.iFrames.timer = iFrameDuration;
 
         if (dmgSrc.contactDamage.pushBack) {
-            const phb = this.getHitboxes().find(h => h.type === 'rect');
-            const ehb = dmgSrc.getHitboxes().find(h => h.type === 'rect');
-            let dx = (phb.x + phb.width / 2) - (ehb.x + ehb.width / 2);
-            let dy = (phb.y + phb.height / 2) - (ehb.y + ehb.height / 2);
+            let dx = (this.x + this.width / 2) - (dmgSrc.x + dmgSrc.width / 2);
+            let dy = (this.y + this.height / 2) - (dmgSrc.y + dmgSrc.height / 2);
 
             const len = Math.sqrt(dx * dx + dy * dy);
 
