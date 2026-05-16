@@ -17,4 +17,10 @@ export const EVENTS = {
     GAME_PAUSED: 'game:paused',
     GAME_RESUME: 'game:resume',
     GAME_RETURN_TO_MENU: 'game:returnToMenu',
+    //player
+    PLAYER_DAMAGED: 'player:damaged',
+    PLAYER_DIED: 'player:died',
+    //enemy
+    ENEMY_DAMAGED: 'enemy:damaged',
+    ENEMY_DIED: 'enemy:died',
 }

@@ -59,24 +59,23 @@ export class Player {
         this.y = (GAME_HEIGHT - playerData.height) / 2;
     }
 
-    receivesDmgFrom(dmgSrc, iFrameDuration = this.iFrames.baseDuration) {
-        if (this.iFrames.timer > 0) return;
-        this.iFrames.timer = iFrameDuration;
+    startIFrames(duration = this.iFrames.baseDuration) {
+        if (this.iFrames.timer > 0) return false;
+        this.iFrames.timer = duration;
+        return true;
+    }
 
-        if (dmgSrc.contactDamage.pushBack) {
-            let dx = (this.x + this.width / 2) - (dmgSrc.x + dmgSrc.width / 2);
-            let dy = (this.y + this.height / 2) - (dmgSrc.y + dmgSrc.height / 2);
+    applyKnockback(dmgSrc) {
+        const dx = (this.x + this.width / 2) - (dmgSrc.x + dmgSrc.width / 2);
+        const dy = (this.y + this.height / 2) - (dmgSrc.y + dmgSrc.height / 2);
+        const len = Math.sqrt(dx * dx + dy * dy);
+        this.knockback.velocity.x = (dx / len) * this.knockback.force;
+        this.knockback.velocity.y = (dy / len) * this.knockback.force;
+    }
 
-            const len = Math.sqrt(dx * dx + dy * dy);
-
-            const normalizedDx = dx/len;
-            const normalizedDy = dy/len;
-
-            this.knockback.velocity.x = normalizedDx * this.knockback.force;
-            this.knockback.velocity.y = normalizedDy * this.knockback.force;
-            this.inboundsCheck();
-        }
-        console.log(`${this.iFrames.timer}`);
+    takeDamage(amount) {
+        this.health.current = Math.max(0, this.health.current - amount);
+        return true;
     }
 
     handleDmgFeedback(deltaTime) {

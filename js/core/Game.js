@@ -10,6 +10,7 @@ import { EnemyManager } from "../managers/EnemyManager.js";
 import { EnemySpawner } from "../managers/EnemySpawner.js";
 import { EventEmitter } from "./EventEmitter.js";
 import { CollisionSystem } from "../systems/CollisionSystem.js";
+import {CollisionManager} from "../managers/CollisionManager.js";
 
 export class Game {
     constructor() {
@@ -25,6 +26,7 @@ export class Game {
         this.enemyManager = new EnemyManager();
         this.enemySpawner = new EnemySpawner(this.enemyManager);
         this.collisionSystem = new CollisionSystem();
+        this.collisionManager = new CollisionManager(this.collisionSystem, this.events);
 
         this.init()
     }
@@ -43,6 +45,11 @@ export class Game {
         this.events.on(EVENTS.GAME_PAUSED, () => this.pauseGame());
         this.events.on(EVENTS.GAME_RESUME, () => this.resumeGame());
         this.events.on(EVENTS.GAME_RETURN_TO_MENU, () => this.returnToMainMenu());
+
+        // Player related events
+        this.events.on(EVENTS.PLAYER_DAMAGED, (health, maxHealth) => {
+            this.events.emit(EVENTS.SOUND, 'player_hurt');
+        })
 
         this.resizeCanvas();
         window.addEventListener("resize", () => this.resizeCanvas());
@@ -65,9 +72,10 @@ export class Game {
             else if (this.sceneManager.pausedScenePhaseIsActive()) this.resumeGame();
         }
 
-        this.update(deltaTime);
+        const activeEnemies = this.enemyManager.getActiveEnemies();
+        this.update(deltaTime, activeEnemies);
         if (!this.sceneManager.menuScenePhaseIsActive()) {
-            this.renderSystem.render(this.player, this.enemyManager.getActiveEnemies());
+            this.renderSystem.render(this.player, activeEnemies);
         } else {
             this.renderSystem.renderMenuBackground();
         }
@@ -75,17 +83,12 @@ export class Game {
         requestAnimationFrame((time) => this.gameLoop(time));
     }
 
-    update(deltaTime) {
+    update(deltaTime, activeEnemies) {
         if (!this.sceneManager.playingScenePhaseIsActive()) return;
         this.player.update(deltaTime, this.inputManager);
         this.enemyManager.update(deltaTime, this.player);
         this.enemySpawner.update(deltaTime);
-
-        for (const enemy of this.enemyManager.getActiveEnemies()) {
-            if (enemy.contactDamage.amount > 0 && this.collisionSystem.check(enemy, this.player)) {
-                enemy.dealContactDamage(this.player);
-            }
-        }
+        this.collisionManager.update(this.player, activeEnemies);
     }
 
     startGame() {

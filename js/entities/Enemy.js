@@ -88,6 +88,6 @@ export class Enemy {
     }
 
     dealContactDamage(player) {
-        player.receivesDmgFrom(this);
+        player.receivesDmgFrom(this, this.damage);
     }
 }
