@@ -17,9 +17,10 @@ export const enemyData = {
             facingNorth: false,
         },
         damage: 1,
-        hitbox: {
-            margin: { top: 5, right: 5, bottom: 5, left: 5 }
-        },
+        hitboxes: [
+            { type: 'rect', margin: { top: 5, right: 5, bottom: 5, left: 5 } },
+            { type: 'circle', radius: 24 },
+        ],
         contactDamage: {
             amount: 1,
             pushBack: true,
@@ -51,9 +52,10 @@ export const enemyData = {
             facingNorth: false,
         },
         damage: 1,
-        hitbox: {
-            margin: { top: 5, right: 5, bottom: 5, left: 5 }
-        },
+        hitboxes: [
+            { type: 'rect', margin: { top: 5, right: 5, bottom: 5, left: 5 } },
+            { type: 'circle', radius: 24 },
+        ],
         contactDamage: {
             amount: 1,
             pushBack: true,

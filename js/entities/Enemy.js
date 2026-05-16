@@ -28,7 +28,7 @@ export class Enemy {
         this.health = this.data.health;
         this.movement = structuredClone(this.data.movement);
         this.damage = this.data.damage;
-        this.hitbox = structuredClone(this.data.hitbox);
+        this.hitboxes = structuredClone(this.data.hitboxes);
         this.contactDamage = structuredClone(this.data.contactDamage);
         this.orientation = structuredClone(this.data.orientation);
         this.buffs = structuredClone(this.data.buffs);
@@ -60,30 +60,31 @@ export class Enemy {
         if (Math.abs(this.movement.velocity.x) > 0.5) this.orientation.facingWest = this.movement.velocity.x < 0;
         if (Math.abs(this.movement.velocity.y) > 0.5) this.orientation.facingNorth = this.movement.velocity.y < 0;
 
-        // Contact damage check — AABB hitbox overlap
-        if (this.contactDamage.amount > 0) {
-            const ehb = this.getHitbox();
-            const phb = player.getHitbox();
-            if (ehb.x < phb.x + phb.width  &&
-                ehb.x + ehb.width  > phb.x  &&
-                ehb.y < phb.y + phb.height  &&
-                ehb.y + ehb.height > phb.y) {
-                this.dealContactDamage(player);
-            }
-        }
-
     }
 
-    getHitbox() {
+    getHitboxes() {
         const facingWest = this.orientation?.facingWest ?? false;
-        const mL = facingWest ? this.hitbox.margin.right : this.hitbox.margin.left;
-        const mR = facingWest ? this.hitbox.margin.left  : this.hitbox.margin.right;
-        return {
-            x:      this.x + mL,
-            y:      this.y + this.hitbox.margin.top,
-            width:  this.width  - mL - mR,
-            height: this.height - this.hitbox.margin.top - this.hitbox.margin.bottom,
-        };
+        return this.hitboxes.map(hb => {
+            if (hb.type === 'rect') {
+                const mL = facingWest ? hb.margin.right : hb.margin.left;
+                const mR = facingWest ? hb.margin.left  : hb.margin.right;
+                return {
+                    type: 'rect',
+                    x:      this.x + mL,
+                    y:      this.y + hb.margin.top,
+                    width:  this.width  - mL - mR,
+                    height: this.height - hb.margin.top - hb.margin.bottom,
+                };
+            }
+            if (hb.type === 'circle') {
+                return {
+                    type: 'circle',
+                    x: this.x + this.width  / 2 + (hb.offsetX ?? 0),
+                    y: this.y + this.height / 2 + (hb.offsetY ?? 0),
+                    radius: hb.radius,
+                };
+            }
+        });
     }
 
     dealContactDamage(player) {

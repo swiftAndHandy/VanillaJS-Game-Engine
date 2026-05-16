@@ -2,9 +2,9 @@ export const playerData = {
     sprite: 'player',
     width: 60,
     height: 74,
-    hitbox: {
-        margin: { top: 40, right: 8, bottom: 8, left: 8 }
-    },
+    hitboxes: [
+        { type: 'rect', margin: { top: 40, right: 8, bottom: 8, left: 8 } },
+    ],
     health: {
         max: 100
     },

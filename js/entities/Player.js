@@ -19,23 +19,38 @@ export class Player {
         this.y = Math.max(0, Math.min(GAME_HEIGHT - this.height, this.y));
     }
 
-    getHitbox() {
+
+
+    getHitboxes() {
         const facingWest = this.orientation?.facingWest ?? false;
-        const mL = facingWest ? this.hitbox.margin.right : this.hitbox.margin.left;
-        const mR = facingWest ? this.hitbox.margin.left  : this.hitbox.margin.right;
-        return {
-            x:      this.x + mL,
-            y:      this.y + this.hitbox.margin.top,
-            width:  this.width  - mL - mR,
-            height: this.height - this.hitbox.margin.top - this.hitbox.margin.bottom,
-        };
+        return this.hitboxes.map(hb => {
+            if (hb.type === 'rect') {
+                const mL = facingWest ? hb.margin.right : hb.margin.left;
+                const mR = facingWest ? hb.margin.left  : hb.margin.right;
+                return {
+                    type: 'rect',
+                    x:      this.x + mL,
+                    y:      this.y + hb.margin.top,
+                    width:  this.width  - mL - mR,
+                    height: this.height - hb.margin.top - hb.margin.bottom,
+                };
+            }
+            if (hb.type === 'circle') {
+                return {
+                    type: 'circle',
+                    x: this.x + this.width  / 2 + (hb.offsetX ?? 0),
+                    y: this.y + this.height / 2 + (hb.offsetY ?? 0),
+                    radius: hb.radius,
+                };
+            }
+        });
     }
 
     reset() {
         this.width = playerData.width;
         this.height = playerData.height;
         this.health = { ...playerData.health, current: playerData.health.max };
-        this.hitbox = structuredClone(playerData.hitbox);
+        this.hitboxes = structuredClone(playerData.hitboxes);
         this.movement = structuredClone(playerData.movement);
         this.knockback = structuredClone(playerData.knockback);
         this.iFrames = structuredClone(playerData.iFrames);
@@ -49,8 +64,8 @@ export class Player {
         this.iFrames.timer = iFrameDuration;
 
         if (dmgSrc.contactDamage.pushBack) {
-            const phb = this.getHitbox();
-            const ehb = dmgSrc.getHitbox();
+            const phb = this.getHitboxes().find(h => h.type === 'rect');
+            const ehb = dmgSrc.getHitboxes().find(h => h.type === 'rect');
             let dx = (phb.x + phb.width / 2) - (ehb.x + ehb.width / 2);
             let dy = (phb.y + phb.height / 2) - (ehb.y + ehb.height / 2);
 

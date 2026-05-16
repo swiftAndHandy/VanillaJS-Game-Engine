@@ -13,13 +13,13 @@ export class RenderSystem {
         this.ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
         this.renderGrid();
 
-        // Depth sort — sort by hitbox bottom (feet position) so entities higher on screen appear behind
+        // Depth sort — sort by rect hitbox bottom (feet position) so entities higher on screen appear behind
+        const getDepth = (e) => {
+            const rect = e.getHitboxes().find(h => h.type === 'rect');
+            return rect ? rect.y + rect.height : e.y + e.height;
+        };
         const entities = [...enemies.filter(e => e.active), player]
-            .sort((a, b) => {
-                const aHb = a.getHitbox();
-                const bHb = b.getHitbox();
-                return (aHb.y + aHb.height) - (bHb.y + bHb.height);
-            });
+            .sort((a, b) => getDepth(a) - getDepth(b));
 
         for (const entity of entities) {
             if (entity === player) {

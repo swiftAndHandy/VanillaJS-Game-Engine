@@ -9,6 +9,7 @@ import { UiManager } from "../managers/UiManager.js";
 import { EnemyManager } from "../managers/EnemyManager.js";
 import { EnemySpawner } from "../managers/EnemySpawner.js";
 import { EventEmitter } from "./EventEmitter.js";
+import { CollisionSystem } from "../systems/CollisionSystem.js";
 
 export class Game {
     constructor() {
@@ -23,6 +24,7 @@ export class Game {
         this.player = new Player();
         this.enemyManager = new EnemyManager();
         this.enemySpawner = new EnemySpawner(this.enemyManager);
+        this.collisionSystem = new CollisionSystem();
 
         this.init()
     }
@@ -78,6 +80,12 @@ export class Game {
         this.player.update(deltaTime, this.inputManager);
         this.enemyManager.update(deltaTime, this.player);
         this.enemySpawner.update(deltaTime);
+
+        for (const enemy of this.enemyManager.getActiveEnemies()) {
+            if (enemy.contactDamage.amount > 0 && this.collisionSystem.check(enemy, this.player)) {
+                enemy.dealContactDamage(this.player);
+            }
+        }
     }
 
     startGame() {
