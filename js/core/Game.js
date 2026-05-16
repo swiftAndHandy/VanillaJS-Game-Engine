@@ -84,7 +84,7 @@ export class Game {
         this.events.emit(EVENTS.SOUND, 'button_click');
         this.sceneManager.setScenePhaseToPlaying();
         this.uiManager.hideAllPanels();
-        this.uiManager.showTimer();
+        this.uiManager.showHUD();
         this.time = 0;
         this.resetGame();
     }
@@ -111,7 +111,7 @@ export class Game {
     returnToMainMenu() {
         this.sceneManager.setScenePhaseToMenu();
         this.events.emit(EVENTS.SOUND, 'button_click');
-        this.uiManager.hideTimer();
+        this.uiManager.hideHUD();
         this.uiManager.showMainMenu();
     }
 

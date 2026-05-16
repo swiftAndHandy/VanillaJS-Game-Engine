@@ -2,6 +2,8 @@ import { EVENTS } from "../core/constants.js";
 
 export class UiManager {
     #mainMenu
+    #hud
+    #healthBar
     #timer
     #pauseMenu
     #loadingScreen
@@ -14,6 +16,8 @@ export class UiManager {
     constructor(events) {
         this.events = events;
         this.#mainMenu = document.getElementById("mainMenu");
+        this.#hud = document.getElementById("hud");
+        this.#healthBar= document.getElementById("healthBarFill");
         this.#timer = document.getElementById("timer");
         this.#pauseMenu = document.getElementById('pauseMenu');
         this.#loadingScreen = document.getElementById('loadingScreen');
@@ -74,12 +78,12 @@ export class UiManager {
         this.#loadingScreen.classList.remove('active');
     }
 
-    showTimer() {
-        this.#timer.classList.add('active');
+    showHUD() {
+        this.#hud.classList.add('active');
     }
 
-    hideTimer() {
-        this.#timer.classList.remove('active');
+    hideHUD() {
+        this.#hud.classList.remove('active');
     }
 
     updateTimer(time) {
