@@ -1,3 +1,6 @@
+import {enemyData} from "../data/enemyData.js";
+import {playerData} from "../data/playerData.js";
+
 export class SpriteManager {
     constructor() {
         this.sprites = {};
@@ -12,7 +15,7 @@ export class SpriteManager {
 
             img.onload = () => {
                 this.sprites[name].loaded = true;
-                console.log(`[DEV] Image loaded: ${name}`);
+                console.log(`[DEV] Image loaded: ${name}: ${path}`);
                 resolve();
             };
 
@@ -28,11 +31,16 @@ export class SpriteManager {
     }
 
     async loadAll() {
-        await Promise.all([
-            this.load('player', './images/player/walk/walking_00.webp'),
-            this.load('enemy_drifter', './images/enemies/drifter/drifter.png'),
-            this.load('enemy_seeker', './images/enemies/seeker/seeker.png'),
-        ]);
+        const spriteEntries = [
+            ...Object.values(enemyData).map(e =>
+                ({name: `enemy_${e.sprite}`, path: `./images/enemies/${e.sprite}/${e.sprite}.png`})
+            ),
+            { name: playerData.sprite, path: `./images/player/default.webp` },
+        ]
+        console.log(spriteEntries);
+        await Promise.all(spriteEntries.map(({name, path}) => {
+            this.load(name, path);
+        }));
 
         // TODO: REMOVE BEFORE SHIPPING
         const DEBUG_LOAD_DELAY = 1000;

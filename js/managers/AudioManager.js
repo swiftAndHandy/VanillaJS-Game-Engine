@@ -1,3 +1,5 @@
+import {audioData} from "../data/audioData.js";
+
 export class AudioManager {
     constructor() {
         this.sounds = {};
@@ -32,11 +34,12 @@ export class AudioManager {
     }
 
     async loadAll() {
-        await Promise.all([
-            this.load('pause', './audio/pause.mp3'),
-            this.load('unpause', './audio/unpause.mp3'),
-            this.load('button_click', './audio/button_click.mp3'),
-            this.load('button_hover', './audio/button_hover.mp3'),
-        ]);
+        await Promise.all(
+            audioData.map(
+                ({name, path}) => {
+                    this.load(name, path)
+                }
+            )
+        );
     }
 }

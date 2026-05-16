@@ -1,4 +1,5 @@
 export const playerData = {
+    sprite: 'player',
     width: 60,
     height: 74,
     hitbox: {
@@ -29,5 +30,5 @@ export const playerData = {
             multiplier: 1,
             duration: 500,
         }
-    }
+    },
 }
