@@ -20,7 +20,7 @@ export class CollisionManager {
 
             if (enemy.contactDamage.amount > 0) {
                 player.takeDamage(enemy.contactDamage.amount);
-                this.events.emit(EVENTS.PLAYER_DAMAGED, player.health.current);
+                this.events.emit(EVENTS.PLAYER_DAMAGED, player.health.current, player.health.max);
             }
 
             enemy.active = false;

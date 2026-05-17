@@ -49,6 +49,7 @@ export class Game {
         // Player related events
         this.events.on(EVENTS.PLAYER_DAMAGED, (health, maxHealth) => {
             this.events.emit(EVENTS.SOUND, 'player_hurt');
+            this.uiManager.updateHealthBar(health, maxHealth);
         })
 
         this.resizeCanvas();
@@ -115,6 +116,7 @@ export class Game {
     resetGame() {
         this.lastTimestamp = performance.now();
         this.player.reset();
+        this.uiManager.updateHealthBar(this.player.health.current, this.player.health.max);
         this.enemyManager.reset();
         this.enemySpawner.reset();
     }

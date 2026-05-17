@@ -51,13 +51,13 @@ export const enemyData = {
             facingWest: false,
             facingNorth: false,
         },
-        damage: 1,
+        damage: 5,
         hitboxes: [
             { type: 'rect', margin: { top: 5, right: 5, bottom: 5, left: 5 } },
             { type: 'circle', radius: 24 },
         ],
         contactDamage: {
-            amount: 1,
+            amount: 5,
             pushBack: true,
         },
         buffs: {

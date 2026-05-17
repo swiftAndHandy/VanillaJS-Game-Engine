@@ -92,4 +92,10 @@ export class UiManager {
         let secs = Math.floor(time % 60);
         this.#timer.textContent = `${mins}:${String(secs).padStart(2, '0')}`;
     }
+
+    updateHealthBar(health, maxHealth) {
+        if (!this.#healthBar) return;
+        const pct = Math.max(0, health / maxHealth);
+        this.#healthBar.style.setProperty("--health-pct", pct);
+    }
 }
